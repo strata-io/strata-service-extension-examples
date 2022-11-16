@@ -3,7 +3,7 @@
 Loading user attributes from an API is a common requirement. The ability to load 
 attributes from proprietary sources enables a user's profile to be enriched. Once 
 user attributes are cached on the session, they can be used for policy evaluation and
-to as HTTP headers that are sent to upstream applications.
+as HTTP headers that are sent to upstream applications.
 
 ## Setup
 
