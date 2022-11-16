@@ -15,7 +15,7 @@ appgateways:
     location: /
     # The 'upstream' used here is purely for demonstration and can be replaced with
     # any URL that is resolvable from the machine the Orchestrator is running on.
-    upstream: https://httpbin.org/get
+    upstream: https://httpbin.org
 
     policies:
       - location: /
