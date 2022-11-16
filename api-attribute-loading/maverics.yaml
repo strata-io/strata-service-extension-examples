@@ -1,0 +1,70 @@
+tls:
+  maverics:
+    # TODO: replace the 'certFile' and 'keyFile' values with an absolute path to a
+    # certificate pair. For more info on the TLS configuration, please reference
+    # https://scriptum.strata.io/get-started/transport-security.
+    certFile: { ABSOLUTE PATH TO CERT FILE }
+    keyFile: { ABSOLUTE PATH TO KEY FILE }
+
+http:
+  address: :443
+  tls: maverics
+
+appgateways:
+  - name: headers
+    location: /
+    # The 'upstream' used here is purely for demonstration and can be replaced with
+    # any URL that is resolvable from the machine the Orchestrator is running on.
+    upstream: https://httpbin.org
+
+    # The loadAttrsSE is what is responsible for loading attributes from the API. For
+    # more details on the Service Extension, please reference
+    # https://docs.strata.io/get-acquainted/app-gateway/service-extension-loadattrs.
+    loadAttrsSE:
+      # It is assumed the loadAttr.go Service Extension file resides in the
+      # '/etc/maverics' directory. To change that, update the 'file' field below.
+      funcName: LoadAttrs
+      file: /etc/maverics/loadAttr.go
+
+    # The headers below depend on attributes returned from the API.
+    headers:
+      id: api.id
+      name: api.name
+      username: api.username
+      email: api.email
+      phone: api.phone
+      street: api.address.street
+      suite: api.address.suite
+      city: api.address.city
+      zipcode: api.address.zipcode
+
+    policies:
+      - location: /
+        authentication:
+          idps:
+            - azure
+        authorization:
+          allowAll: true
+
+      - location: ~ \.(jpg|png|ico|svg|ttf|js|css)
+        authentication:
+          allowUnauthenticated: true
+        authorization:
+          allowAll: true
+
+# Azure AD is used as the IDP in this example, but that can easily be changed by
+# modifying the IDP and connector definitions below.
+idps:
+  - name: azure
+
+connectors:
+  - name: azure
+    type: azure
+    authType: oidc
+    # TODO: replace the below values with the values defined in Azure AD. Please
+    # reference https://learn.microsoft.com/en-us/azure/active-directory/manage-apps/add-application-portal-setup-oidc-sso
+    # for steps on how to create an OIDC-based application.
+    oidcWellKnownURL: { OIDC WELL KNOWN URL }
+    oauthClientID: { OAUTH CLIENT ID }
+    oauthClientSecret: { OAUTH CLIENT SECRET }
+    oauthRedirectURL: { OAUTH REDIRECT URL }
