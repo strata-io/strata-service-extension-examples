@@ -11,7 +11,7 @@ http:
   tls: maverics
 
 appgateways:
-  - name: headers
+  - name: exampleAPIAttributeLoading
     location: /
     # The 'upstream' used here is purely for demonstration and can be replaced with
     # any URL that is resolvable from the machine the Orchestrator is running on.
