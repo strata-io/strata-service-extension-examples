@@ -1,0 +1,66 @@
+tls:
+  maverics:
+    # TODO: replace the 'certFile' and 'keyFile' values with an absolute path to a
+    # certificate pair. For more info on the TLS configuration, please reference
+    # https://scriptum.strata.io/get-started/transport-security.
+    certFile: { ABSOLUTE PATH TO CERT FILE }
+    keyFile: { ABSOLUTE PATH TO KEY FILE }
+
+http:
+  address: :443
+  tls: maverics
+
+appgateways:
+  - name: headers
+    location: /
+    # The 'upstream' used here is purely for demonstration and can be replaced with
+    # any URL that is resolvable from the machine the Orchestrator is running on.
+    upstream: https://httpbin.org/get
+
+    policies:
+      - location: /
+        authentication:
+          # It is assumed the auth.go Service Extension file resides in the
+          # '/etc/maverics' directory. To change that, update the 'file' fields below.
+          isAuthenticatedSE:
+            funcName: IsAuthenticated
+            file: /etc/maverics/auth.go
+          authenticateSE:
+            funcName: Authenticate
+            file: /etc/maverics/auth.go
+        authorization:
+          allowAll: true
+
+      - location: ~ \.(jpg|png|ico|svg|ttf|js|css)
+        authentication:
+          allowUnauthenticated: true
+        authorization:
+          allowAll: true
+
+idps:
+  - name: azure
+  - name: auth0
+
+connectors:
+  # The 'name' property is used as a unique ID that the Service Extensions depend on.
+  # Please ensure the Service Extensions are updated if the name of the connectors change.
+  - name: azure
+    type: azure
+    authType: oidc
+    # TODO: replace the below values with the values defined in Azure AD. Please
+    # reference https://learn.microsoft.com/en-us/azure/active-directory/manage-apps/add-application-portal-setup-oidc-sso
+    # for steps on how to create an OIDC-based application.
+    oidcWellKnownURL: { OIDC WELL KNOWN URL }
+    oauthClientID: { OAUTH CLIENT ID }
+    oauthClientSecret: { OAUTH CLIENT SECRET }
+    oauthRedirectURL: { OAUTH REDIRECT URL }
+
+  - name: auth0
+    type: auth0
+    # TODO: replace the below values with the values defined in Auth0. Please
+    # reference https://auth0.com/docs/get-started/auth0-overview/create-applications/regular-web-apps
+    # for steps on how to create an OIDC-based application.
+    oidcWellKnownURL: { OIDC WELL KNOWN URL }
+    oauthClientID: { OAUTH CLIENT ID }
+    oauthClientSecret: { OAUTH CLIENT SECRET }
+    oauthRedirectURL: { OAUTH REDIRECT URL }
