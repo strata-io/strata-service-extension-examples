@@ -12,7 +12,12 @@ import (
 )
 
 const (
-	apiURL           = "https://jsonplaceholder.typicode.com"
+	// The API used for the example returns data about users. The Service Extension
+	// interacts with the '/users' endpoint.
+	apiURL = "https://jsonplaceholder.typicode.com"
+
+	// The API request made in this example filters the response by email address. To
+	// search for a different user, update the email address below.
 	exampleUserEmail = "Sincere@april.biz"
 )
 
