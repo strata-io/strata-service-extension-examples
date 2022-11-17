@@ -18,4 +18,6 @@ example running.
 Orchestrator was running on your laptop, the URL would be https://localhost/headers.
 1. You should be redirected for authentication against the configured IDP.
 1. After successful auth, application traffic will be proxied through the AppGateway 
-and the attributes returned from the API will be sent to app as HTTP headers.
+and the attributes returned from the API will be sent to app as HTTP headers. The
+custom headers that are defined in the configuration file will be sent to the 
+upstream application.
