@@ -10,7 +10,10 @@ the example to use any set of IDPs should be straightforward.
 ## Setup
 Please reference the [maverics.yaml](maverics.yaml) configuration file for a set of
 TODOs. These action items are the minimum amount of changes necessary to get the 
-example running.
+example running. 
+
+Additionally, the [`auth.go`](auth.go) Service Extension contains documentation on 
+the implementation. No changes are required in that file, however.
 
 ## Testing
 1. Restart the Orchestrator after the TODOs are resolved and ensure it starts successfully.
