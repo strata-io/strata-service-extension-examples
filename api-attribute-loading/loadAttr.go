@@ -18,6 +18,9 @@ const (
 
 	// The API request made in this example filters the response by email address. To
 	// search for a different user, update the email address below.
+	// For this example, exampleUserEmail is used since the mock API only knows
+	// about a static set of users. For production use, the user would normally be
+	// looked up by doing something like session.GetString(req, "azure.email").
 	exampleUserEmail = "Sincere@april.biz"
 )
 
@@ -43,12 +46,8 @@ func LoadAttrs(ag *app.AppGateway, rw http.ResponseWriter, req *http.Request) er
 	log.Info("msg", "loading custom attribute from API")
 
 	log.Info("msg", "building API request")
-	// For this example, we use exampleUserEmail since the mock API only knows
-	// about a static set of users. For production use, the user would normally be
-	// looked up by doing something like session.GetString(req, "azure.email").
 	filter := url.Values{}
 	filter.Add("email", exampleUserEmail)
-
 	apiReq, err := http.NewRequest(
 		http.MethodGet,
 		apiURL+"/users?"+filter.Encode(),
