@@ -21,6 +21,7 @@ appgateways:
       EXAMPLE-SUB: azure.sub
       # It is assumed the header.go Service Extension file resides in the
       # '/etc/maverics' directory. To change that, update the 'file' fields below.
+      # TODO: confirm the file paths defined below are correct.
       EXAMPLE-FIRST-NAME:
         createHeader:
           funcName: CreateFirstNameHeader
