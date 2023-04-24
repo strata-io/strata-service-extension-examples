@@ -23,10 +23,10 @@ appgateways:
           # It is assumed the auth.go Service Extension file resides in the
           # '/etc/maverics' directory. To change that, update the 'file' fields below.
           isAuthenticatedSE:
-            funcName: IsAuthenticated
+            funcName: isAuthenticated
             file: /etc/maverics/auth.go
           authenticateSE:
-            funcName: Authenticate
+            funcName: authenticate
             file: /etc/maverics/auth.go
         authorization:
           allowAll: true
