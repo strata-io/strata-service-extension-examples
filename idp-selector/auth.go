@@ -11,7 +11,7 @@ import (
 
 // IsAuthenticated determines if the user is authenticated. Authentication status is
 // derived by querying the session cache.
-func IsAuthenticated(ag *app.AppGateway, _ http.ResponseWriter, req *http.Request) bool {
+func isAuthenticated(ag *app.AppGateway, _ http.ResponseWriter, req *http.Request) bool {
 	log.Info("msg", "determining if user is authenticated")
 
 	for idpName := range ag.IDPs {
@@ -26,7 +26,7 @@ func IsAuthenticated(ag *app.AppGateway, _ http.ResponseWriter, req *http.Reques
 }
 
 // Authenticate authenticates the user against the IDP that they select.
-func Authenticate(ag *app.AppGateway, rw http.ResponseWriter, req *http.Request) error {
+func authenticate(ag *app.AppGateway, rw http.ResponseWriter, req *http.Request) error {
 	log.Info("msg", "authenticating user")
 
 	if req.Method == http.MethodGet {
