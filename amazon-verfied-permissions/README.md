@@ -1,4 +1,3 @@
-# Amazon Verified Permissions Quick Start
 # Amazon Verified Permissions Quick Start Guide
 
 ## Download assets from the Strata public repository
