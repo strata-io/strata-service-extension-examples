@@ -1,0 +1,75 @@
+{
+  "appgateways": [
+    {
+      "basePath": "/",
+      "errorPage": "/error",
+      "host": "localhost",
+      "name": "Sonar",
+      "policies": [
+        {
+          "authentication": {
+            "allowUnauthenticated": true
+          },
+          "authorization": {
+            "allowAll": true
+          },
+          "location": "/accessdenied"
+        },
+        {
+          "authentication": {
+            "allowUnauthenticated": true
+          },
+          "authorization": {
+            "allowAll": true
+          },
+          "location": "/images"
+        },
+        {
+          "authentication": {
+            "allowUnauthenticated": true
+          },
+          "authorization": {
+            "allowAll": true
+          },
+          "location": "/styles"
+        },
+        {
+          "authentication": {
+            "idps": [
+              "Amazon_Cognito"
+            ]
+          },
+          "authorization": {
+            "isAuthorizedSE": {
+              "file": "./service-extensions/dde92ff9-d31b-457b-9ff3-75b0049b167b.go",
+              "funcName": "IsAuthorized"
+            }
+          },
+          "headers": {
+            "SM_USER": "Amazon_Cognito.email",
+            "firstname": "Amazon_Cognito.given_name",
+            "lastname": "Amazon_Cognito.family_name"
+          },
+          "location": "/"
+        }
+      ],
+      "preserveHost": true,
+      "type": "header",
+      "unauthorizedPage": "/accessdenied",
+      "upstream": "http://localhost:8987"
+    }
+  ],
+  "connectors": [
+    {
+      "disablePKCE": false,
+      "name": "Amazon_Cognito",
+      "oauthClientID": "46ot082l0l5vm6ue2llj3isqpp",
+      "oauthClientSecret": "1u9udi3qvgdljnsc3b9prle1esuh5k9o51ttdc7jdl3qa44s4hco",
+      "oauthRedirectURL": "https://localhost/cognito",
+      "oidcLogoutCallbackURL": "",
+      "oidcWellKnownURL": "https://cognito-idp.us-east-1.amazonaws.com/us-east-1_8dLk0YEJR/.well-known/openid-configuration",
+      "type": "cognito"
+    }
+  ],
+  "version": 1
+}
