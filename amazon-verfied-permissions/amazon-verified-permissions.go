@@ -28,7 +28,7 @@ const (
 	awsSecretKey = "your-aws-secret-key"
 	// The session value from your IdP used as the principal ID in the call to
 	// Amazon Verified Permissions.
-	principalID  = "Amazon_Cognito.email"
+	principalID = "Amazon_Cognito.group"
 )
 
 // IsAuthorized is called after you log in with your IdP.  This function calls the
@@ -76,7 +76,7 @@ func createVerifiedPermissionsRequest(principal, path string) (*http.Request, er
 		},
 		Principal: Principal{
 			EntityId:   principal,
-			EntityType: "User",
+			EntityType: "Group",
 		},
 		Resource: Resource{
 			EntityId:   path,
@@ -134,13 +134,14 @@ func signRequest(req *http.Request, now time.Time, credential string) (string, e
 	req.Body = io.NopCloser(bytes.NewReader(body))
 
 	payload := fmt.Sprintf(`POST
-/policy-stores/ps-bcfb84b6-8962-4f77-a895-416ad2a35e99/is-authorized
+/policy-stores/%s/is-authorized
 
 host:authz-verifiedpermissions.us-east-1.amazonaws.com
 x-amz-date:%s
 
 host;x-amz-date
 %s`,
+		policyStoreID,
 		now.UTC().Format("20060102T150405Z"),
 		bodyHash,
 	)
