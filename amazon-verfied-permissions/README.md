@@ -32,9 +32,7 @@ permit (
 
 Now, click Settings in the sidebar of Amazon Verified Permissions. Make a note of the Policy Store ID, as this will be used in the service extension.
 
-Additionally, you will need to create an [Amazon Cognito user pool](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-identity-pools.html), group, go into identity fabric and update the client ID and secret from the user pool.
-
- For this user, create a new policy with the code block below. Name this policy Sonar and select this policy for the user:
+Additionally, you will need to create a new [IAM role in the AWS console](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html?icmpid=docs_iam_help_panel). After clicking **Create Role** on the Roles page, select **Web identity**. Select Amazon Cognito as the Identity provider. On the Trust relationships tab, copy and paste the policy below.
 
 ```
 {
@@ -51,7 +49,7 @@ Additionally, you will need to create an [Amazon Cognito user pool](https://docs
 }
 ```
 
-Create an access key for this user, and make a note of the AWS key ID and secret key, as this will also be used in the service extension.
+Make a note of the Role ARN, as this will be used in the service extension.
 
 ## Sign up for Maverics 
 Next, sign up for the Maverics Identity Orchestration Platform at [http://maverics.strata.io](http://maverics.strata.io). You can sign up with HYPR, Google, or Microsoft Azure SSO. 
