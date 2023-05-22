@@ -15,7 +15,8 @@ Strata has made a number of assets available for download on our Github reposito
   * **localhost.cer**
   * **localhost.key**
 
-## Create the Amazon Verified Permissions policy and an IAM user
+## Create the Amazon Verified Permissions policy
+
 
 To implement Maverics with Amazon Verified Permissions, you must first create your Amazon Verified Permissions policies in the AWS Management Console. Maverics will use these policies to perform the authorization.
 
@@ -23,7 +24,7 @@ To implement Maverics with Amazon Verified Permissions, you must first create yo
 
 ![Amazon Verified Permissions policy](images/verified-permissions-policy.png)
 
-Use the sample policy available in our Github repository. This  sample policy permits view and create access to an application for a user called aadkins@sonar-systems.com.
+Use the sample policy below. This sample policy permits view and create access to an application for a user called aadkins@sonar-systems.com.
 
 ```
 permit (
@@ -38,12 +39,13 @@ permit (
 
 Now, click Settings in the sidebar of Amazon Verified Permissions. Make a note of the Policy Store ID, as this will be used in the service extension.
 
-<<<<<<< Updated upstream
-=======
+## Create an IAM policy and user access keys
 
->>>>>>> Stashed changes
-Additionally, you will need to create a new [IAM role in the AWS console](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html?icmpid=docs_iam_help_panel). After clicking **Create Role** on the Roles page, select **Web identity**. Select Amazon Cognito as the Identity provider. On the Trust relationships tab, copy and paste the policy below.
+Additionally, you will need to create a new [IAM policy in the AWS console](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies.html), [an IAM user](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html) with that policy, and generate access keys to call the API for the service extension.
 
+1. From the AWS console, go to IAM and select **Policies** under Access management.
+2. Click **Create policy**.
+3. Under Policy editor, click **JSON** for the JSON editor, and copy and paste the policy below.
 ```
 {
     "Version": "2012-10-17",
@@ -58,8 +60,23 @@ Additionally, you will need to create a new [IAM role in the AWS console](https:
     ]
 }
 ```
+4. Click **Next**.
+5. Under Policy name enter *AmazonVerifiedPermissions* and click **Create policy**.
 
-Make a note of the Role ARN, as this will be used in the service extension.
+Now you can create the user and access keys.
+
+1. From the AWS console, go to IAM and select **Users** under Access management.
+2. Click **Add users**.
+3. Give the user a name, such as *Sonar-CLI*, and leave the the Provider user access to AWS Management Console unchecked. Click **Next**.
+4. On the Set permissions page, select **Attach policies directly** and search for and select the *AmazonVerifiedPermissions* policy you've just created. Click **Next**.
+5. Click **Create user**.
+6. In the User list click the user you've just created.
+7. Go to the Security credentials tab and, under Access keys, click **Create access key**.
+8. Select Application running outside AWS and click **Next**.
+9. Under Description tag value, enter *AmazonVerifiedPermissions* and click **Create access key**.
+10. Make note of the access key and secret access key, as you will be using this for the service extension.
+
+![User access keys](images/access-keys.png)
 
 ## Sign up for Maverics
 
