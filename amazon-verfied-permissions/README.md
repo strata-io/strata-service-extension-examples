@@ -116,15 +116,6 @@ Now that you’ve created a configuration with the default Recipe, the configura
 
 Creating a composable identity fabric requires extreme configurability. Service Extensions give you the ability to extend and customize User Flows to suit any particular use case. We use a service extension to call an Amazon Verified Permissions policy to make an authorization decision.
 
-<<<<<<< Updated upstream
-1. First, open [**Amazon-Verified-Permissions-RecipeSE.go** from Github](https://github.com/strata-io/strata-service-extension-examples/blob/main/amazon-verfied-permissions/amazon-verified-permissions.go) and copy the raw code. 
-2. In Maverics go to the [Service Extensions page](https://maverics.strata.io/service_extensions) from the left navigation in Maverics, and select **Authorization Service Extension**. 
-3. Enter the name below and click **Create**:
-```
-Amazon-Verified-Permissions
-``` 
-4. When you click Create, the service extension code box appears. Paste the code copied from the **Amazon-Verified-Permissions-RecipeSE.go** file. 
-=======
 1. First, open [**Amazon-Verified-Permissions-RecipeSE.go** from Github](https://github.com/strata-io/strata-service-extension-examples/blob/main/amazon-verfied-permissions/amazon-verified-permissions.go) and copy the raw code.
 2. In Maverics go to the [Service Extensions page](https://maverics.strata.io/service_extensions) from the left navigation in Maverics, and select **Authorization Service Extension**.
 3. Enter the name below and click **Create**:
@@ -134,7 +125,6 @@ Amazon-Verified-Permissions
 ```
 
 4. When you click Create, the service extension code box appears. Paste the code copied from the **Amazon-Verified-Permissions-RecipeSE.go** file.
->>>>>>> Stashed changes
 5. Follow the instructions in the code to replace:
 
 * `policyStoreID` - ID of your Amazon Verified Permissions Store
@@ -143,11 +133,7 @@ Amazon-Verified-Permissions
 
 ![Amazon Verified Permissions service extension](images/service-extension.png)
 
-<<<<<<< Updated upstream
-6. Now we will associate this Service Extension with Amazon_Cognito identity fabric. At the bottom of the screen under Providers, select your Amazon_Cognito identity provider instance and click **Add**. 
-=======
 6. Now we will associate this Service Extension with Amazon_Cognito identity fabric. At the bottom of the screen under Providers, select your Amazon_Cognito identity provider instance and click **Add**.
->>>>>>> Stashed changes
 7. Click **Update** to save your service extension.
 
 ## Configure the access policy to use Amazon Verified Permissions
