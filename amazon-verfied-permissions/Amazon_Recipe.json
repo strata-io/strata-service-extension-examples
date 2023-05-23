@@ -22,7 +22,7 @@
           "authorization": {
             "allowAll": true
           },
-          "location": "/images"
+          "location": "/styles"
         },
         {
           "authentication": {
@@ -31,13 +31,16 @@
           "authorization": {
             "allowAll": true
           },
-          "location": "/styles"
+          "location": "/images"
         },
         {
           "authentication": {
             "idps": [
               "Amazon_Cognito"
             ]
+          },
+          "authorization": {
+            "allowAll": false
           },
           "headers": {
             "SM_USER": "Amazon_Cognito.email",
@@ -57,13 +60,19 @@
     {
       "disablePKCE": false,
       "name": "Amazon_Cognito",
-      "oauthClientID": "<registered_app_client_id>",
-      "oauthClientSecret": "<registered_app_client_secret>",
+      "oauthClientID": "\u003cregistered_app_client_id\u003e",
+      "oauthClientSecret": "\u003cregistered_app_client_secret\u003e",
       "oauthRedirectURL": "https://localhost/cognito",
       "oidcLogoutCallbackURL": "",
-      "oidcWellKnownURL": "https://cognito-idp.<AWS region>.amazonaws.com/<UserPoolId>/.well-known/openid-configuration",
+      "oidcWellKnownURL": "https://cognito-idp.\u003cAWS region\u003e.amazonaws.com/\u003cUserPoolId\u003e/.well-known/openid-configuration",
       "type": "cognito"
     }
   ],
-  "version": 1
+  "session": {
+    "cookie": {
+      "domain": ""
+    },
+    "maxLifetimeSeconds": 0
+  },
+  "version": 30
 }
