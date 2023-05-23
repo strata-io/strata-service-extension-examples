@@ -39,12 +39,6 @@
               "Amazon_Cognito"
             ]
           },
-          "authorization": {
-            "isAuthorizedSE": {
-              "file": "./service-extensions/dde92ff9-d31b-457b-9ff3-75b0049b167b.go",
-              "funcName": "IsAuthorized"
-            }
-          },
           "headers": {
             "SM_USER": "Amazon_Cognito.email",
             "firstname": "Amazon_Cognito.given_name",
@@ -63,11 +57,11 @@
     {
       "disablePKCE": false,
       "name": "Amazon_Cognito",
-      "oauthClientID": "46ot082l0l5vm6ue2llj3isqpp",
-      "oauthClientSecret": "1u9udi3qvgdljnsc3b9prle1esuh5k9o51ttdc7jdl3qa44s4hco",
+      "oauthClientID": "<registered_app_client_id>",
+      "oauthClientSecret": "<registered_app_client_secret>",
       "oauthRedirectURL": "https://localhost/cognito",
       "oidcLogoutCallbackURL": "",
-      "oidcWellKnownURL": "https://cognito-idp.us-east-1.amazonaws.com/us-east-1_8dLk0YEJR/.well-known/openid-configuration",
+      "oidcWellKnownURL": "https://cognito-idp.<AWS region>.amazonaws.com/<UserPoolId>/.well-known/openid-configuration",
       "type": "cognito"
     }
   ],
