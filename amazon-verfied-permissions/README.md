@@ -87,13 +87,42 @@ Update the following fields:
 
 ## Create the Amazon Verified Permissions policy
 
-The next step in modernization, we'll add Amazon Verified permissions to your identity fabric for authorization. In these steps we will use a Maverics service extension to call Amazon Verified Permissions to enforce a Cedar policy Go to Amazon Verified Permissions within your AWS console and create a policy.
+Creating a composable identity fabric requires extreme configurability. Service extensions give you the ability to extend and customize User Flows to suit any particular use case. The next step for Sonar's modernization, will be to add Amazon Verified permissions to your identity fabric for authorization.
+
+First we need to set up IAM policy and user with the policy so that the Service Extension has the credentials to access Verified Permissions.
+
+* In your AWS Console go to **IAM** and select **Policies**, click the **Create policy** button.
+* Select **JSON** and paste in the following value:
+
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "verifiedpermissions:*"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
+```
+
+* Click **Next**. At the top give it a name in the Policy name field(e.g. Verified Permissions) and **Create policy**.
+* Click **Users** and click the **Add Users**, give it a name, select **Next**.
+* Choose the Attach policies directly, search for the policy you just created, click the check mark to select it, and click **Next**. Click **Create user** to finish creating the user.
+* Back in the **Users** section you will search for the user you just created and click on the **Security credentials** tab. Scroll down and click **Create access key** and choose "Application running outside of AWS" and click **next**.
+* Give it a tag value, then click **Create access key**.
+* On the Retrieve access keys screen note the Access keys and secret access keys value.
+
+Go to Amazon Verified Permissions within your AWS console and create a policy. ****
 
 <Link to the AVP docs once it’s available>
 
 ![Amazon Verified Permissions policy](images/verified-permissions-policy.png)
 
-Use the sample policy available below. This sample policy permits view and create access to an application for the test user you created in your Cognito user pool.
+Use the sample policy available below. This sample policy permits view and create access to an application for the test user you have in your Cognito user pool.
 
 ```
 permit (
@@ -107,9 +136,9 @@ permit (
 
 Click Settings in the sidebar of Amazon Verified Permissions. Make a note of the Policy Store ID, as this will be used in the service extension.
 
-## Set up Amazon Verified Permissions in Maverics
+## Configure the Service extension in Maverics
 
-Creating a composable identity fabric requires extreme configurability. Service extensions give you the ability to extend and customize User Flows to suit any particular use case. We use a service extension to call an Amazon Verified Permissions policy to make an authorization decision.
+In these steps we will use a Maverics service extension to call Amazon Verified Permissions to enforce the example Cedar policy. 
 
 1. First, open [**Amazon-Verified-Permissions-RecipeSE.go** from Github](https://github.com/strata-io/strata-service-extension-examples/blob/main/amazon-verfied-permissions/amazon-verified-permissions.go) and copy the raw code.
 2. In Maverics go to the [Service Extensions page](https://maverics.strata.io/service_extensions) from the left navigation in Maverics, and select **Authorization Service Extension**.
