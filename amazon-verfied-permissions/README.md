@@ -6,7 +6,7 @@ This repository includes everything you need to pull it all together. The scenar
 In this this repository you will find:
 * **Amazon_Recipe.json**: The custom configuration that will be copied to Maverics.
 * **amazon-verified-permissions.go**: The code for the service extension that will connect your user flow to your Amazon Verified Permissions policy.
-* A local environment configulration and self signed keys to run an Orchestrator:
+* A local environment configuration and self signed keys to run an Orchestrator:
   * **maverics.env**
   * **localhost.cer**
   * **localhost.key**
@@ -51,7 +51,7 @@ When setting up the user pool, we recommend leaving all of the options at their 
 2. On the Integrate your app section:
 
 * Under Hosted authentication pages, select **Use the Cognito Hosted UI**.
-* Under Initial app client, select **Confidetial client**.
+* Under Initial app client, select **Confidential client**.
 * Enter an app name, like *Sonar-app*.
 * Ensure **Generate a client secret** is selected under Client secret.
 * Under Allowed callback URLs, enter `https://localhost/oidc`
