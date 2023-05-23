@@ -1,16 +1,17 @@
 # Amazon Verified Permissions Quick Start Guide
-In this guide, we will show you how you can modernize a legacy application with Amazon Cognito for authentication and Amazon Verified Permissions for authorization. With Maverics you can create a new Identity Fabric for your applications without having to update the application's code. 
+In this guide, we will show you how you can use Maverics to modernize a legacy application with Amazon Cognito for authentication and Amazon Verified Permissions for authorization. With Maverics you can create a new identity fabric for your applications without having to update the application's code.
 
-In this guide we have everything you need to pull it all together. The scenario is based on Sonar a non-standard app that that does not understand modern identity protocols. Currently, Sonar relies on a legacy identity provider (IdP) called SiteMinder.  We will show you how to replace SiteMinder with Amazon Cognito for authentication, and use Amazon Verified Permissions for authorization. Maverics is flexible, and this process works with a modern app or identity system migration as well.
-
-This guide will take you 45 minutes to an hour to complete.
+This repository includes everything you need to pull it all together. The scenario is based on Sonar, a non-standard application that does not understand modern identity protocols. Currently, Sonar relies on a legacy identity provider (IdP) called SiteMinder. Maverics is flexible, and this process works with a modern app or identity system migration as well.
 
 In this this repository you will find:
-* Service extension that integrates with Amazon Verified Permissions
-* Recipe that you will import into Maverics 
-* Local environment config and self signed keys to run an Orchestrator
+* **Amazon_Recipe.json**: The custom configuration that will be copied to Maverics.
+* **amazon-verified-permissions.go**: The code for the service extension that will connect your user flow to your Amazon Verified Permissions policy.
+* A local environment configulration and self signed keys to run an Orchestrator:
+  * **maverics.env**
+  * **localhost.cer**
+  * **localhost.key**
 
-
+This guide will take you 45 minutes to an hour to complete.
 
 ## Sign up for Maverics
 
@@ -18,11 +19,11 @@ First, sign up for the Maverics Identity Orchestration Platform at [http://maver
 
 ![Sign up for Strata](images/strata-home.png)
 
-After signing up for an account, you will land on the Dashboard. You can then set up your orchestrator, environment, identity fabric, and user flow using the buttons on the screen or left navigation.
+After signing up for an account, you'll land on the Dashboard. You can then set up your orchestrator, environment, identity fabric, and user flow using the buttons on the screen or left navigation.
 
 ## Import the demo Orchestration Recipe
 
-When we mix and match together a couple of identity services to build out end-to-end user journeys, we call them Orchestration Recipes. Using this Recipe we will deploy a user flow for a non-standard header-based demo application called Sonar.
+When we mix and match multiple identity services to build out end-to-end user journeys, we call them Orchestration Recipes. Using this Recipe, we'll deploy a user flow for a non-standard header-based demo application called Sonar.
 
 To upload this recipe:
 
@@ -38,11 +39,11 @@ Now that you’ve created a configuration with the default Recipe, the configura
 * **User Flows**: Sonar Flow appears under User Flows. The user flow defines the experience users will have when they go to access it.
   * Select **Sonar Flow**. In this overview, you will note that the flow uses Amazon Cognito for authentication, and there are access policies on each of the application’s resources.
 
-## Set up Cognito for authentication 
+## Set up Cognito for authentication
 
-The first step we'll take to modernize Sonar is to use Amazon Cognito for authentication. In this section, you'll create a Cognito user pool with an app client for Sonar, as well as a test user. You'll input configuration into Maverics to complete the setup. 
+The first step we'll take to modernize Sonar is to use Amazon Cognito for authentication. In this section, you'll create a Cognito user pool with an app client for Sonar, as well as a test user. You'll then input configuration details into Maverics to complete the setup.
 
-First, follow steps 1 and 2 in Amazon's [Cognito Getting Started Guide](https://docs.aws.amazon.com/cognito/latest/developerguide/getting-started-with-cognito-user-pools.html) to create a user pool and add an app client.
+First, from Cognito in your AWS console, follow steps 1 and 2 in Amazon's [Cognito Getting Started Guide](https://docs.aws.amazon.com/cognito/latest/developerguide/getting-started-with-cognito-user-pools.html) to create a user pool and add an app client.
 
 When setting up the user pool, we recommend leaving all of the options at their default setting **except** for the following:
 
@@ -79,7 +80,9 @@ Update the following fields:
 
 ## Create the Amazon Verified Permissions policy
 
-The next step in modernization, we'll add Amazon Verified permissions to your identity fabric for authorization. In these steps we will use a Maverics service extension to call Amazon Verified Permissions to enforce a Cedar policy Go to Amazon Verified Permissions within your AWS console and create a policy.
+For the next step in modernization, we'll add Amazon Verified Permissions to your identity fabric for authorization. In these steps, we'll create an Amazon Verified Permissions policy in Cedar.
+
+First, go to Amazon Verified Permissions within your AWS console and create a policy.
 
 <Link to the AVP docs once it’s available>
 
@@ -99,9 +102,9 @@ permit (
 
 Click Settings in the sidebar of Amazon Verified Permissions. Make a note of the Policy Store ID, as this will be used in the service extension.
 
-## Configure the Service extension in Maverics
+## Configure the service extension in Maverics
 
-In these steps we will use a Maverics service extension to call Amazon Verified Permissions to enforce the example Cedar policy. 
+In these steps we will use a Maverics service extension to call Amazon Verified Permissions to enforce the example Cedar policy.
 
 1. First, open [**Amazon-Verified-Permissions-RecipeSE.go** from Github](https://github.com/strata-io/strata-service-extension-examples/blob/main/amazon-verfied-permissions/amazon-verified-permissions.go) and copy the raw code.
 2. In Maverics go to the [Service Extensions page](https://maverics.strata.io/service_extensions) from the left navigation in Maverics, and select **Authorization Service Extension**.
@@ -120,15 +123,15 @@ Amazon-Verified-Permissions
 
 ![Amazon Verified Permissions service extension](images/service-extension.png)
 
-6. Now we will associate this Service Extension with Amazon_Cognito identity fabric. At the bottom of the screen under Providers, select your Amazon_Cognito identity provider instance and click **Add**.
-7. Click **Update** to save your service extension.
+1. Now we'll associate this Service Extension with the Amazon_Cognito identity fabric. At the top right section of the screen under Providers, select your Amazon_Cognito identity provider instance and click **Add**.
+2. Click **Update** to save your service extension.
 
-## Update the User Flow access policy the app to use Amazon Verified Permissions
+## Update the user flow access policy to use Amazon Verified Permissions
 
-From here, you can now complete the setup of your user flow.
+From here, you can now complete the setup of your app's user flow.
 
-1. Go to the User Flows page from the left navigation.
-2. Click on **Sonar flow**, and scroll down to the **Add access control policy** section.
+1. Go to the User flows page from the left navigation.
+2. Click **Sonar flow**, and scroll down to the **Add access control policy** section.
 3. Click **Resource location: /** to edit the root resource policy.
    ![Acces Control Policy](images/access-control-policy.png)
 4. You will then be prompted to configure access control. Under Access Controls, select **Use service extension: Amazon Verified Permissions policy**.
@@ -153,12 +156,13 @@ In this section, we will create a local environment, get the public key, and con
    * **Description**: Additional description of the environment.
 3. Click **Create**. The details of your environment appear on the next page.
 
+## Configure an orchestrator to read the signed configuration
 
 To continue this setup, you will need to download the following files to a directory on your machine:
-* **maverics.env**: The file for your local environment
-* **Self-signed certs**:  PEM encoded key pair is provided for inbound TLS to the orchestrator's HTTP server
-  * **localhost.cer**
-  * **localhost.key**
+* [**maverics.env**](https://github.com/strata-io/strata-service-extension-examples/blob/main/amazon-verfied-permissions/maverics.env): The file for your local environment
+* **Self-signed certs**:  PEM encoded key pair provided for the inbound TLS to the orchestrator's HTTP server
+  * [**localhost.cer**](https://github.com/strata-io/strata-service-extension-examples/blob/main/amazon-verfied-permissions/localhost.crt)
+  * [**localhost.key**](https://github.com/strata-io/strata-service-extension-examples/blob/main/amazon-verfied-permissions/localhost.key)
 
 1. Download the orchestrator appropriate for your operating system from the Download Orchestrator section. Save this file to your local working directory, and [follow our instructions](https://docs.strata.io/set-up-maverics/configure-orchestrators) to install based on your operating system.
 2. Additionally, download the public key .pem file for your local environment from the section labeled **Download Public Key.** Save this to your local working directory.
