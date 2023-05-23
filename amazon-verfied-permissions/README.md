@@ -2,7 +2,8 @@
 
 This evaluation will take you 45 minutes to an hour to complete.
 
-When Amazon Verified Permissions is configured as a service extension in Maverics, Cedar policies can be extended by providing additional data.
+<more overview> 
+
 
 ## Download assets from the Strata public repository
 
@@ -29,8 +30,6 @@ When we mix and match together a couple of identity services to build out end-to
 
 Currently, Sonar relies on a legacy identity provider (IdP) called SiteMinder and an on-premises database for user attributes. We will show you how to replace SiteMinder with Amazon Cognito for authentication, and use Amazon Verified Permissions for authorization. Maverics is flexible, and this process works with a modern app or identity system migration as well.
 
-A recipe is an example
-
 To upload this recipe:
 
 1. Go to the dashboard and click the **Import Identity Orchestration Recipe** button at the top of the screen.
@@ -45,34 +44,56 @@ Now that you’ve created a configuration with the default Recipe, the configura
 * **User Flows**: Sonar Flow appears under User Flows. The user flow defines the experience users will have when they go to access it.
   * Select **Sonar Flow**. In this overview, you will note that the flow uses Amazon Cognito for authentication, and there are access policies on each of the application’s resources.
 
-## Create the Amazon Verified Permissions policy and a test user
+## Set up Cognito for authentication 
 
-To implement Maverics with Amazon Verified Permissions, you must first create your Cognito user pool and Amazon Verified Permissions policies in the AWS Management Console. Maverics will use these policies to perform the authorization.
+The first step we'll take to modernize Sonar will be to use Amazon Cognito for authentication. In this section, you create a Cognito user pool with a app client for Sonar  and a test user. You will input configuration into Maverics to complete the setup. 
 
-First, follow steps 1 and 2 in Amazon's [Cognito Getting Started Guide](https://docs.aws.amazon.com/cognito/latest/developerguide/getting-started-with-cognito-user-pools.html) to create a user pool and add an app client. 
+First, follow steps 1 and 2 in Amazon's [Cognito Getting Started Guide](https://docs.aws.amazon.com/cognito/latest/developerguide/getting-started-with-cognito-user-pools.html) to create a user pool and add an app client.
 
 When setting up the user pool, we recommend leaving all of the options at their default setting **except** for the following:
 
-   1. On the Configure sign-in experience page, select **Email** as the sign-in option.
-   2. On the Configure security requirements page, under Multi-factor authentication, select **No MFA**.
-   3. On the Configure message delivery page, select **Send email with Cognito**.
-   4. On the Integrate your app page:
-   * Under Hosted authentication pages, select **Use the Cognito Hosted UI**.
-   * Under Initial app client, select **Confidetial client**.
-   * Enter an app name, like *Sonar-app*.
-   * Ensure **Generate a client secret** is selected under Client secret.
-   * Under Allowed callback URLs,  enter `https://localhost/oidc`
-  5. Scroll to the bottom and click **Create user pool**. 
+1. On the Configure sign-in experience page, select **Email** as the sign-in option.
+2. On the Integrate your app section:
 
-After you've created the user pool and you've been redirected to the User pools page, click the user pool you've just created. Go to the App integration tab and scroll down to the App client list. Click the app name, and on the app client page, copy the **Client ID** and **Client secret**. Addionally, make a note of the **User Pool ID** and **AWS region** from the User Pool page. You will need these to configure the service extension.
+* Under Hosted authentication pages, select **Use the Cognito Hosted UI**.
+* Under Initial app client, select **Confidetial client**.
+* Enter an app name, like *Sonar-app*.
+* Ensure **Generate a client secret** is selected under Client secret.
+* Under Allowed callback URLs, enter `https://localhost/oidc`
 
-Next, go to Amazon Verified Permissions within your AWS console and create a policy.
+5. Scroll to the bottom and click **Create user pool**.
+
+After you've created the user pool and you've been redirected to the User pools page, click the user pool you've just created.
+
+Make a note of the **User Pool ID** and **AWS region**. Go to the App integration tab and scroll down to the App client list. Click the app name, and on the app client page, copy the **Client ID** and **Client secret**.
+
+In the **Users** section, click the **Create user** button and follow the instructions. Make note of the email address you used for the username. 
+
+### Configure Maverics to use your Amazon Cognito User Pool as the IDP
+
+Return to Maverics at https://maverics.strata.io. Click [Identity fabric](https://maverics.strata.io/identity_fabric_components) in the left navigation, and select Amazonn_Cognito.
+
+![Sign up for Strata](images/amazon_cognito_config.png)
+
+Update the following fields:
+
+* **OIDC Well Known URL** - Replace `<AWS region>` with the AWS region code where your user pool is located (e.g., us-east-1) and `<UserPoolId>` with the actual ID of your user pool.
+
+  `https://cognito-idp.<AWS region>.amazonaws.com/<UserPoolId>/.well-known/openid-configuration`
+* **OAuth Client ID** - Enter the client ID of the Maverics application registered in the Amazon Cognito user pool.
+* **OAuth Client Secret** - Enter the client secret of the Maverics application registered in the Amazon Cognito user pool.
+
+6. Create a test user
+
+## Create the Amazon Verified Permissions policy
+
+The next step in modernization, we'll add Amazon Verified permissions to your identity fabric for authorization. In these steps we will use a Maverics service extension to call Amazon Verified Permissions to enforce a Cedar policy Go to Amazon Verified Permissions within your AWS console and create a policy.
 
 <Link to the AVP docs once it’s available>
 
 ![Amazon Verified Permissions policy](images/verified-permissions-policy.png)
 
-Use the sample policy available below. This sample policy permits view and create access to an application for a test user you have in your Cognito user pool.
+Use the sample policy available below. This sample policy permits view and create access to an application for the test user you created in your Cognito user pool.
 
 ```
 permit (
@@ -85,23 +106,6 @@ permit (
 ![Amazon Verified Permissions Policy Store ID](images/policy-store-id.png)
 
 Click Settings in the sidebar of Amazon Verified Permissions. Make a note of the Policy Store ID, as this will be used in the service extension.
-
-
-## Configure Maverics to use your Amazon Cognito User Pool as the IDP
-
-Return to Maverics at https://maverics.strata.io. Click Identity fabric in the left navigation, and select Amazonn_Cognito. 
-
-![Sign up for Strata](images/amazon_cognito_config.png)
-
-Update the following fields:
-
-* **OIDC Well Known URL** - Replace `<AWS region>` with the AWS region code where your user pool is located (e.g., us-east-1) and `<UserPoolId>` with the actual ID of your user pool.
-
-  `https://cognito-idp.<AWS region>.amazonaws.com/<UserPoolId>/.well-known/openid-configuration`
-
-* **OAuth Client ID** - Enter the client ID of the Maverics application registered in the Amazon Cognito user pool.
-
-* **OAuth Client Secret** - Enter the client secret of the Maverics application registered in the Amazon Cognito user pool.
 
 ## Set up Amazon Verified Permissions in Maverics
 
