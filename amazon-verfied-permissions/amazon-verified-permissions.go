@@ -28,11 +28,7 @@ const (
 	awsSecretKey = "your-aws-secret-key"
 	// The session value from your IdP used as the principal ID in the call to
 	// Amazon Verified Permissions.
-<<<<<<< Updated upstream
-	principalID  = "Amazon_Cognito.email"
-=======
 	principalID = "Amazon_Cognito.email"
->>>>>>> Stashed changes
 )
 
 // IsAuthorized is called after you log in with your IdP.  This function calls the
