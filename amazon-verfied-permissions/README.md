@@ -45,7 +45,7 @@ Now that you’ve created a configuration with the default Recipe, the configura
 * **User Flows**: Sonar Flow appears under User Flows. The user flow defines the experience users will have when they go to access it.
   * Select **Sonar Flow**. In this overview, you will note that the flow uses Amazon Cognito for authentication, and there are access policies on each of the application’s resources.
 
-## Create the Amazon Verified Permissions policy and an IAM user
+## Create the Amazon Verified Permissions policy and a test user
 
 To implement Maverics with Amazon Verified Permissions, you must first create your Cognito user pool and Amazon Verified Permissions policies in the AWS Management Console. Maverics will use these policies to perform the authorization.
 
