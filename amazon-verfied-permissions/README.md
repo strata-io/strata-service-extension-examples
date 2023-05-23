@@ -64,7 +64,7 @@ Now, click Settings in the sidebar of Amazon Verified Permissions. Make a note o
 }
 ```
 
-Make a note of the Role ARN, as this will be used in the service extension.
+Steps to generate generate creds. 
 
 ## Sign up for Maverics
 
@@ -91,19 +91,19 @@ To upload this recipe:
 
 Now that you’ve created a configuration with the default Recipe, the configuration details will appear in Maverics. Go to the dashboard from the left navigation and confirm the following:
 
-* **Identity Fabric**: Your identity fabric is a collection of all the identity services that you use with your apps. Here you will see Amazon_Cognito will be used as the primary IDP.
+* **Identity Fabric**: Your identity fabric is a collection of all the identity services that you use with your apps. You can choose a variety of different idenity services to use as an IDP, passwordless, or a user attribute provider. Here you will see Amazon_Cognito will be used as the primary IDP.
 * **Applications**: Applications are the resources and tools your users access. Sonar is a non-standards-based app that relies on headers for personalization and authorization decisions. We will proxy this application to modernize it. This application has multiple resources we will protect with access policies that are defined in the User Flow.
 * **User Flows**: Sonar Flow appears under User Flows. The user flow defines the experience users will have when they go to access it.
   * Select **Sonar Flow**. In this overview, you will note that the flow uses Amazon Cognito for authentication, and there are access policies on each of the application’s resources.
 
 ## Configure Maverics to use your Amazon Cognito User Pool as the IDP
 
-In your Console Create a User Pool, add a app client, and create a test user. Follow steps 1 and 2 in the [Cognito Getting Started Guide](https://docs.aws.amazon.com/cognito/latest/developerguide/getting-started-with-cognito-user-pools.htmlhttps:/) to Create a user pool and add a app a app client.
+In your AWS Console Create a User Pool, add a app client, and create a test user. Follow steps 1 and 2 in the [Cognito Getting Started Guide](https://docs.aws.amazon.com/cognito/latest/developerguide/getting-started-with-cognito-user-pools.htmlhttps:/) to Create a user pool and add a app a app client.
 
 * Make note of the following information that you will use in Maverics:
   * User pool AWS Region and User Pool ID
   * Client ID & Secret
-* We are trialing this recipe locally. Add `https://localhost/cognito` as a "Allowed callback url" in your registered application. This is the URL Amazon Cognito will use to redirect the client back to after authentication. The Maverics OIDC hander will be served on this URL.
+* **Add a allowed callback UR**L We are trialing this recipe locally and you need to add `https://localhost/cognito` as a "Allowed callback url" in your registered application. This is the URL Amazon Cognito will use to redirect the client back to after authentication. The Maverics OIDC hander will be served on this URL.
 * Add a test user to the user pool to test the sign in flow
 
 ![Sign up for Strata](images/amazon_cognito_config.png)
@@ -118,10 +118,7 @@ Select Identity Fabric and select Amazon_Cognito and update the following fields
 
 **OAuth Client Secret** - Enter the client secret of the Maverics application registered in the Amazon Cognito user pool.
 
-Open the **“/” Resource** in the Access Policy section to edit its policy.
 
-
-Users accessing this resource are required to use Amazon Cognito for authentication. This is the first step in the modernization of Sonar, and the app will no longer use SiteMinder. This is all done without having to change any of the Sonar code.
 
 ## Set up Amazon Verified Permissions in Maverics
 
@@ -277,7 +274,7 @@ source /path/to/your/working/directory/maverics.env && ./maverics_darwin_amd64 -
 Testing your user flow ensures that Maverics is working as expected and has passed through the correct headers. You can test your user flow by logging into the Sonar app.
 
 1. Open a browser window to access the Sonar app at https://localhost
-2. Login as aadkins@sonar-systems.com with the password `password`.
+2. Login your test user username and password
 3. This user should be denied.
 4. Go to the Amazon Verified Permissions policy page and change the policy from `forbid` to `permit` and save the policy.
 5. Open a new browser window and repeat steps 1 and 2.
