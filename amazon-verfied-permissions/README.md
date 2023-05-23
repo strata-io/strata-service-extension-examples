@@ -40,7 +40,7 @@ Now that you’ve created a configuration with the default Recipe, the configura
 
 ## Set up Cognito for authentication 
 
-The first step we'll take to modernize Sonar will be to use Amazon Cognito for authentication. In this section, you create a Cognito user pool with a app client for Sonar  and a test user. You will input configuration into Maverics to complete the setup. 
+The first step we'll take to modernize Sonar is to use Amazon Cognito for authentication. In this section, you'll create a Cognito user pool with an app client for Sonar, as well as a test user. You'll input configuration into Maverics to complete the setup. 
 
 First, follow steps 1 and 2 in Amazon's [Cognito Getting Started Guide](https://docs.aws.amazon.com/cognito/latest/developerguide/getting-started-with-cognito-user-pools.html) to create a user pool and add an app client.
 
@@ -55,19 +55,19 @@ When setting up the user pool, we recommend leaving all of the options at their 
 * Ensure **Generate a client secret** is selected under Client secret.
 * Under Allowed callback URLs, enter `https://localhost/oidc`
 
-5. Scroll to the bottom and click **Create user pool**.
+3. Scroll to the bottom and click **Create user pool**.
 
 After you've created the user pool and you've been redirected to the User pools page, click the user pool you've just created.
 
 Make a note of the **User Pool ID** and **AWS region**. Go to the App integration tab and scroll down to the App client list. Click the app name, and on the app client page, copy the **Client ID** and **Client secret**.
 
-In the **Users** section, click the **Create user** button and follow the instructions. Make note of the email address you used for the username. 
+In the **Users** section, click the **Create user** button and follow the instructions. Make a note of the email address you used for the username.
 
 ### Configure Maverics to use your Amazon Cognito User Pool as the IDP
 
-Return to Maverics at https://maverics.strata.io. Click [Identity fabric](https://maverics.strata.io/identity_fabric_components) in the left navigation, and select Amazonn_Cognito.
+Return to Maverics at https://maverics.strata.io. Click [Identity fabric](https://maverics.strata.io/identity_fabric_components) in the left navigation, and select Amazon_Cognito.
 
-![Sign up for Strata](images/amazon_cognito_config.png)
+![Amazon Cognito Identity Fabric](images/amazon_cognito_config.png)
 
 Update the following fields:
 
@@ -76,38 +76,10 @@ Update the following fields:
   `https://cognito-idp.<AWS region>.amazonaws.com/<UserPoolId>/.well-known/openid-configuration`
 * **OAuth Client ID** - Enter the client ID of the Maverics application registered in the Amazon Cognito user pool.
 * **OAuth Client Secret** - Enter the client secret of the Maverics application registered in the Amazon Cognito user pool.
+
 ## Create the Amazon Verified Permissions policy
 
-Creating a composable identity fabric requires extreme configurability. Service extensions give you the ability to extend and customize User Flows to suit any particular use case. The next step for Sonar's modernization, will be to add Amazon Verified permissions to your identity fabric for authorization.
-
-First we need to set up IAM policy and user with the policy so that the Service Extension has the credentials to access Verified Permissions.
-
-* In your AWS Console go to **IAM** and select **Policies**, click the **Create policy** button.
-* Select **JSON** and paste in the following value:
-
-```
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Action": [
-                "verifiedpermissions:*"
-            ],
-            "Resource": "*"
-        }
-    ]
-}
-```
-
-* Click **Next**. At the top give it a name in the Policy name field(e.g. Verified Permissions) and **Create policy**.
-* Click **Users** and click the **Add Users**, give it a name, select **Next**.
-* Choose the Attach policies directly, search for the policy you just created, click the check mark to select it, and click **Next**. Click **Create user** to finish creating the user.
-* Back in the **Users** section you will search for the user you just created and click on the **Security credentials** tab. Scroll down and click **Create access key** and choose "Application running outside of AWS" and click **next**.
-* Give it a tag value, then click **Create access key**.
-* On the Retrieve access keys screen note the Access keys and secret access key values.
-
-Go to Amazon Verified Permissions within your AWS console and create a policy. ****
+The next step in modernization, we'll add Amazon Verified permissions to your identity fabric for authorization. In these steps we will use a Maverics service extension to call Amazon Verified Permissions to enforce a Cedar policy Go to Amazon Verified Permissions within your AWS console and create a policy.
 
 <Link to the AVP docs once it’s available>
 
