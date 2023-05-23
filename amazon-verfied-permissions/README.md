@@ -35,7 +35,7 @@ To upload this recipe:
 
 1. Go to the dashboard and click the **Import Identity Orchestration Recipe** button at the top of the screen.
 2. From the Import screen, enter Sonar as the name for the user flow.
-3. Copy the code from **Amazon-Verified-Permissions-Recipe.json** and paste it into the Configuration text box.
+3. Copy the code from **Amazon-Recipe.json** and paste it into the Configuration text box.
 4. Click **Create**.
 
 Now that you’ve created a configuration with the default Recipe, the configuration details will appear in Maverics. Go to the dashboard from the left navigation and confirm the following:
@@ -51,13 +51,20 @@ To implement Maverics with Amazon Verified Permissions, you must first create yo
 
 First, follow steps 1 and 2 in Amazon's [Cognito Getting Started Guide](https://docs.aws.amazon.com/cognito/latest/developerguide/getting-started-with-cognito-user-pools.html) to create a user pool and add an app client. 
 
-You will also need to add the following: 
-* **A test user to your user pool**: for example, `testuser@example.com`
-* **An allowed callback URL**: Use `https://localhost/cognito` as an "Allowed callback url" in your registered application, as we are trialing this recipe locally. This is the URL Amazon Cognito will use to redirect the client back to after authentication. The Maverics OIDC hander will be served on this URL.
+When setting up the user pool, we recommend leaving all of the options at their default setting **except** for the following:
 
-Once you've completed these tasks, make note of the following information that you will use in Maverics:
-  * User pool AWS Region and User Pool ID
-  * Client ID & Secret
+   1. On the Configure sign-in experience page, select **Email** as the sign-in option.
+   2. On the Configure security requirements page, under Multi-factor authentication, select **No MFA**.
+   3. On the Configure message delivery page, select **Send email with Cognito**.
+   4. On the Integrate your app page:
+   * Under Hosted authentication pages, select **Use the Cognito Hosted UI**.
+   * Under Initial app client, select **Confidetial client**.
+   * Enter an app name, like *Sonar-app*.
+   * Ensure **Generate a client secret** is selected under Client secret.
+   * Under Allowed callback URLs,  enter `https://localhost/oidc`
+  5. Scroll to the bottom and click **Create user pool**. 
+
+After you've created the user pool and you've been redirected to the User pools page, click the user pool you've just created. Go to the App integration tab and scroll down to the App client list. Click the app name, and on the app client page, copy the **Client ID** and **Client secret**. Addionally, make a note of the **User Pool ID** and **AWS region** from the User Pool page. You will need these to configure the service extension.
 
 Next, go to Amazon Verified Permissions within your AWS console and create a policy.
 
