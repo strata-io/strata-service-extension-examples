@@ -15,8 +15,7 @@ Strata has made a number of assets available for download on our Github reposito
   * **localhost.cer**
   * **localhost.key**
 
-## Create the Amazon Verified Permissions policy
-
+## Create the Amazon Verified Permissions policy and an IAM user
 
 To implement Maverics with Amazon Verified Permissions, you must first create your Amazon Verified Permissions policies in the AWS Management Console. Maverics will use these policies to perform the authorization.
 
@@ -24,28 +23,32 @@ To implement Maverics with Amazon Verified Permissions, you must first create yo
 
 ![Amazon Verified Permissions policy](images/verified-permissions-policy.png)
 
-Use the sample policy below. This sample policy permits view and create access to an application for a user called aadkins@sonar-systems.com.
+Use the sample policy available in our Github repository. This  sample policy permits view and create access to an application for a test user you have in your Cognito user pool.
 
 ```
 permit (
-	principal == User::"aadkins@sonarsystems.com",
+	principal == User::"testuser@example.com",
 	action in [Action::"create", Action::"view"],
 	resource == Endpoint::"/"
 );
 ```
 
-
 ![Amazon Verified Permissions Policy Store ID](images/policy-store-id.png)
 
 Now, click Settings in the sidebar of Amazon Verified Permissions. Make a note of the Policy Store ID, as this will be used in the service extension.
 
-## Create an IAM policy and user access keys
+<<<<<<< Updated upstream
+========================
 
-Additionally, you will need to create a new [IAM policy in the AWS console](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies.html), [an IAM user](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html) with that policy, and generate access keys to call the API for the service extension.
+>>>>>>> Stashed changes
+>>>>>>> Additionally, you will need to create a new [IAM role in the AWS console](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html?icmpid=docs_iam_help_panel). After clicking **Create Role** on the Roles page, select **Web identity**. Select Amazon Cognito as the Identity provider. On the Trust relationships tab, copy and paste the policy below.
+>>>>>>>
+>>>>>>
+>>>>>
+>>>>
+>>>
+>>
 
-1. From the AWS console, go to IAM and select **Policies** under Access management.
-2. Click **Create policy**.
-3. Under Policy editor, click **JSON** for the JSON editor, and copy and paste the policy below.
 ```
 {
     "Version": "2012-10-17",
@@ -60,23 +63,8 @@ Additionally, you will need to create a new [IAM policy in the AWS console](http
     ]
 }
 ```
-4. Click **Next**.
-5. Under Policy name enter *AmazonVerifiedPermissions* and click **Create policy**.
 
-Now you can create the user and access keys.
-
-1. From the AWS console, go to IAM and select **Users** under Access management.
-2. Click **Add users**.
-3. Give the user a name, such as *Sonar-CLI*, and leave the the Provider user access to AWS Management Console unchecked. Click **Next**.
-4. On the Set permissions page, select **Attach policies directly** and search for and select the *AmazonVerifiedPermissions* policy you've just created. Click **Next**.
-5. Click **Create user**.
-6. In the User list click the user you've just created.
-7. Go to the Security credentials tab and, under Access keys, click **Create access key**.
-8. Select Application running outside AWS and click **Next**.
-9. Under Description tag value, enter *AmazonVerifiedPermissions* and click **Create access key**.
-10. Make note of the access key and secret access key, as you will be using this for the service extension.
-
-![User access keys](images/access-keys.png)
+Make a note of the Role ARN, as this will be used in the service extension.
 
 ## Sign up for Maverics
 
@@ -86,13 +74,13 @@ Next, sign up for the Maverics Identity Orchestration Platform at [http://maveri
 
 After signing up for an account, you will land on the Dashboard. You can then set up your orchestrator, environment, identity fabric, and user flow using the buttons on the screen or left navigation.
 
+## Import the demo Orchestration Recipe
+
 When we mix and match together a couple of identity services to build out end-to-end user journeys, we call them Orchestration Recipes. Using this Recipe we will deploy a user flow for a non-standard header-based demo application called Sonar.
 
 Currently, Sonar relies on a legacy identity provider (IdP) called SiteMinder and an on-premises database for user attributes. We will show you how to replace SiteMinder with Amazon Cognito for authentication, and use Amazon Verified Permissions for authorization. Maverics is flexible, and this process works with a modern app or identity system migration as well.
 
-This recipe automatically configures Amazon Cognito as an OIDC identity provider. In the configuration, we supply all the configuration necessary including Client ID and secrets. We also supply a username and password to test authentication flows and run the Sonar app without TLS. This is a developer mode Recipe named **Amazon-Verified-Permissions-Recipe.json** for evaluation purposes only.
-
-## Import the demo Orchestration Recipe
+A recipe is an example
 
 To upload this recipe:
 
@@ -101,20 +89,45 @@ To upload this recipe:
 3. Copy the code from **Amazon-Verified-Permissions-Recipe.json** and paste it into the Configuration text box.
 4. Click **Create**.
 
-## Explore the Recipe
-
 Now that you’ve created a configuration with the default Recipe, the configuration details will appear in Maverics. Go to the dashboard from the left navigation and confirm the following:
 
-* **Identity fabric**: Your identity fabric is a collection of all the identity services that you use with your apps. Amazon Cognito appears under identity fabric. Cognito has been preconfigured with a user pool controlled by Strata with aadkins@sonar-systems.com as a user.
-* **Applications**: Applications are the resources and tools your users access. Sonar is a non-standards-based app that relies on headers for personalization and authorization decisions. We will proxy this application to modernize it. Each resource will be used to build access policies for this application.
+* **Identity Fabric**: Your identity fabric is a collection of all the identity services that you use with your apps. Here you will see Amazon_Cognito will be used as the primary IDP.
+* **Applications**: Applications are the resources and tools your users access. Sonar is a non-standards-based app that relies on headers for personalization and authorization decisions. We will proxy this application to modernize it. This application has multiple resources we will protect with access policies that are defined in the User Flow.
 * **User Flows**: Sonar Flow appears under User Flows. The user flow defines the experience users will have when they go to access it.
   * Select **Sonar Flow**. In this overview, you will note that the flow uses Amazon Cognito for authentication, and there are access policies on each of the application’s resources.
-  * Open the **“/” Resource** in the Access Policy section to edit its policy.
-* Users accessing this resource are required to use Amazon Cognito for authentication. This is the first step in the modernization of Sonar, and the app will no longer use SiteMinder. This is all done without having to change any of the Sonar code.
+
+## Configure Maverics to use your Amazon Cognito User Pool as the IDP
+
+In your Console Create a User Pool, add a app client, and create a test user. Follow steps 1 and 2 in the [Cognito Getting Started Guide](https://docs.aws.amazon.com/cognito/latest/developerguide/getting-started-with-cognito-user-pools.htmlhttps:/) to Create a user pool and add a app a app client.
+
+* Make note of the following information that you will use in Maverics:
+  * User pool AWS Region and User Pool ID
+  * Client ID & Secret
+* We are trialing this recipe locally. Add `https://localhost/cognito` as a "Allowed callback url" in your registered application. This is the URL Amazon Cognito will use to redirect the client back to after authentication. The Maverics OIDC hander will be served on this URL.
+* Add a test user to the user pool to test the sign in flow
+
+![Sign up for Strata](images/amazon_cognito_config.png)
+
+Select Identity Fabric and select Amazon_Cognito and update the following fields:
+
+**OIDC Well Known URL** - Replace `<AWS region>` with the AWS region code where your user pool is located (e.g., us-east-1) and `<UserPoolId>` with the actual ID of your user pool.
+
+`https://cognito-idp.<AWS region>.amazonaws.com/<UserPoolId>/.well-known/openid-configuration`
+
+**OAuth Client ID** - Enter the client ID of the Maverics application registered in the Amazon Cognito user pool.
+
+**OAuth Client Secret** - Enter the client secret of the Maverics application registered in the Amazon Cognito user pool.
+
+Open the **“/” Resource** in the Access Policy section to edit its policy.
+
+
+Users accessing this resource are required to use Amazon Cognito for authentication. This is the first step in the modernization of Sonar, and the app will no longer use SiteMinder. This is all done without having to change any of the Sonar code.
 
 ## Set up Amazon Verified Permissions in Maverics
 
 Creating a composable identity fabric requires extreme configurability. Service Extensions give you the ability to extend and customize User Flows to suit any particular use case. We use a service extension to call an Amazon Verified Permissions policy to make an authorization decision.
+
+<<<<<<< Updated upstream
 
 1. First, open [**Amazon-Verified-Permissions-RecipeSE.go** from Github](https://github.com/strata-io/strata-service-extension-examples/blob/main/amazon-verfied-permissions/amazon-verified-permissions.go) and copy the raw code.
 2. In Maverics go to the [Service Extensions page](https://maverics.strata.io/service_extensions) from the left navigation in Maverics, and select **Authorization Service Extension**.
@@ -125,6 +138,25 @@ Amazon-Verified-Permissions
 ```
 
 4. When you click Create, the service extension code box appears. Paste the code copied from the **Amazon-Verified-Permissions-RecipeSE.go** file.
+   ===============================================================================================================================================
+5. First, open [**Amazon-Verified-Permissions-RecipeSE.go** from Github](https://github.com/strata-io/strata-service-extension-examples/blob/main/amazon-verfied-permissions/amazon-verified-permissions.go) and copy the raw code.
+6. In Maverics go to the [Service Extensions page](https://maverics.strata.io/service_extensions) from the left navigation in Maverics, and select **Authorization Service Extension**.
+7. Enter the name below and click **Create**:
+
+```
+Amazon-Verified-Permissions
+```
+
+4. When you click Create, the service extension code box appears. Paste the code copied from the **Amazon-Verified-Permissions-RecipeSE.go** file.
+
+>>>>>>> Stashed changes
+>>>>>>>
+>>>>>>
+>>>>>
+>>>>
+>>>
+>>
+
 5. Follow the instructions in the code to replace:
 
 * `policyStoreID` - ID of your Amazon Verified Permissions Store
@@ -133,7 +165,20 @@ Amazon-Verified-Permissions
 
 ![Amazon Verified Permissions service extension](images/service-extension.png)
 
+<<<<<<< Updated upstream
 6. Now we will associate this Service Extension with Amazon_Cognito identity fabric. At the bottom of the screen under Providers, select your Amazon_Cognito identity provider instance and click **Add**.
+==========================================================================================================================================================================================================
+
+6. Now we will associate this Service Extension with Amazon_Cognito identity fabric. At the bottom of the screen under Providers, select your Amazon_Cognito identity provider instance and click **Add**.
+
+>>>>>>> Stashed changes
+>>>>>>>
+>>>>>>
+>>>>>
+>>>>
+>>>
+>>
+
 7. Click **Update** to save your service extension.
 
 ## Configure the access policy to use Amazon Verified Permissions
@@ -151,6 +196,8 @@ From here, you can now complete the setup of your user flow.
 ## Create a local environment for testing
 
 ![Maverics Cloud Model](images/cloud-model.png)
+
+<!-- @theresacjones has this section been updated to match the QuickStart guide?-->
 
 Environments enable a hybrid air gap approach where there is no dependency between your own environments, applications, and identity services with Maverics.
 
