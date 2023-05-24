@@ -28,7 +28,7 @@ const (
 	awsSecretKey = "your-aws-secret-key"
 	// The session value from your IdP used as the principal ID in the call to
 	// Amazon Verified Permissions.
-	principalID = "Amazon_Cognito.group"
+	principalID = "Amazon_Cognito.email"
 )
 
 // IsAuthorized is called after you log in with your IdP.  This function calls the
@@ -76,7 +76,7 @@ func createVerifiedPermissionsRequest(principal, path string) (*http.Request, er
 		},
 		Principal: Principal{
 			EntityId:   principal,
-			EntityType: "Group",
+			EntityType: "User",
 		},
 		Resource: Resource{
 			EntityId:   path,
