@@ -34,7 +34,7 @@ To upload this recipe:
 
 Now that you’ve created a configuration with the default Recipe, the configuration details will appear in Maverics. Go to the dashboard from the left navigation and confirm the following:
 
-* **Identity Fabric**: Your identity fabric is a collection of all the identity services that you use with your apps. You can choose a variety of different idenity services to use as an IDP, passwordless, or a user attribute provider. Here you will see Amazon_Cognito will be used as the primary IDP.
+* **Identity Fabric**: Your identity fabric is a collection of all the identity services that you use with your apps. You can choose a variety of different identity services to use as an IDP, passwordless, or a user attribute provider. Here you will see Amazon_Cognito will be used as the primary IDP.
 * **Applications**: Applications are the resources and tools your users access. Sonar is a non-standards-based app that relies on headers for personalization and authorization decisions. We will proxy this application to modernize it. This application has multiple resources we will protect with access policies that are defined in the User Flow.
 * **User Flows**: Sonar Flow appears under User Flows. The user flow defines the experience users will have when they go to access it.
   * Select **Sonar Flow**. In this overview, you will note that the flow uses Amazon Cognito for authentication, and there are access policies on each of the application’s resources.
