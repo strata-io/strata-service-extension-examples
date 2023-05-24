@@ -22,7 +22,7 @@
           "authorization": {
             "allowAll": true
           },
-          "location": "/images"
+          "location": "/styles"
         },
         {
           "authentication": {
@@ -31,7 +31,7 @@
           "authorization": {
             "allowAll": true
           },
-          "location": "/styles"
+          "location": "/images"
         },
         {
           "authentication": {
@@ -40,10 +40,7 @@
             ]
           },
           "authorization": {
-            "isAuthorizedSE": {
-              "file": "./service-extensions/dde92ff9-d31b-457b-9ff3-75b0049b167b.go",
-              "funcName": "IsAuthorized"
-            }
+            "allowAll": false
           },
           "headers": {
             "SM_USER": "Amazon_Cognito.email",
@@ -63,13 +60,19 @@
     {
       "disablePKCE": false,
       "name": "Amazon_Cognito",
-      "oauthClientID": "46ot082l0l5vm6ue2llj3isqpp",
-      "oauthClientSecret": "1u9udi3qvgdljnsc3b9prle1esuh5k9o51ttdc7jdl3qa44s4hco",
+      "oauthClientID": "\u003cregistered_app_client_id\u003e",
+      "oauthClientSecret": "\u003cregistered_app_client_secret\u003e",
       "oauthRedirectURL": "https://localhost/cognito",
       "oidcLogoutCallbackURL": "",
-      "oidcWellKnownURL": "https://cognito-idp.us-east-1.amazonaws.com/us-east-1_8dLk0YEJR/.well-known/openid-configuration",
+      "oidcWellKnownURL": "https://cognito-idp.\u003cAWS region\u003e.amazonaws.com/\u003cUserPoolId\u003e/.well-known/openid-configuration",
       "type": "cognito"
     }
   ],
-  "version": 1
+  "session": {
+    "cookie": {
+      "domain": ""
+    },
+    "maxLifetimeSeconds": 0
+  },
+  "version": 30
 }
