@@ -134,13 +134,14 @@ func signRequest(req *http.Request, now time.Time, credential string) (string, e
 	req.Body = io.NopCloser(bytes.NewReader(body))
 
 	payload := fmt.Sprintf(`POST
-/policy-stores/ps-bcfb84b6-8962-4f77-a895-416ad2a35e99/is-authorized
+/policy-stores/%s/is-authorized
 
 host:authz-verifiedpermissions.us-east-1.amazonaws.com
 x-amz-date:%s
 
 host;x-amz-date
 %s`,
+		policyStoreID,
 		now.UTC().Format("20060102T150405Z"),
 		bodyHash,
 	)
