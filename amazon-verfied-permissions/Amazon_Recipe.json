@@ -62,7 +62,7 @@
       "name": "Amazon_Cognito",
       "oauthClientID": "\u003cregistered_app_client_id\u003e",
       "oauthClientSecret": "\u003cregistered_app_client_secret\u003e",
-      "oauthRedirectURL": "https://localhost/cognito",
+      "oauthRedirectURL": "https://localhost/oidc",
       "oidcLogoutCallbackURL": "",
       "oidcWellKnownURL": "https://cognito-idp.\u003cAWS region\u003e.amazonaws.com/\u003cUserPoolId\u003e/.well-known/openid-configuration",
       "type": "cognito"
