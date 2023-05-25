@@ -93,11 +93,14 @@ For the next step in modernization, we'll add Amazon Verified Permissions to you
 3. Use the policy available below. This policy permits view and create access to the root resource on your application.
 4. Replace the `User` value with the email address of your test user in your Cognito user pool.
 
+```
 permit (
-	principal == User::"<placeholder>",
-	action in [Action::"create", Action::"view"],
-	resource == Endpoint::"/"
+principal == User::"placeholder",
+action in [Action::"create", Action::"view"],
+resource == Endpoint::"/"
 );
+```
+
 ![Amazon Verified Permissions Policy Store ID](images/policy-store-id.png)
 
 5. Click Settings in the sidebar of Amazon Verified Permissions. Make a note of the Policy Store ID, as this will be used in the service extension.
@@ -113,6 +116,7 @@ In these steps we will use a Maverics service extension to call Amazon Verified 
 ```
 Amazon-Verified-Permissions
 ```
+
 4. When you click Create, the service extension code box appears. Paste the code copied from the **Amazon-Verified-Permissions-RecipeSE.go** file.
 5. Follow the instructions in the code to replace:
 
@@ -176,6 +180,7 @@ export MAVERICS_BUNDLE_PUBLIC_KEY_FILE=./<environment>_public_key.pem
 export MAVERICS_TLS_SERVER_CERT_FILE=./localhost.crt
 export MAVERICS_TLS_SERVER_KEY_FILE=./localhost.key
 ```
+
 This environment file configures the following settings:
 
 * `MAVERICS_RELOAD_CONFIG`: this setting turns on auto-reload
@@ -214,6 +219,7 @@ From the Terminal, start the orchestrator with the following command:
 ```
 source /path/to/your/working/directory/maverics.env && ./maverics_darwin_amd64 -config /path/to/your/working/directory/maverics.tar.gz
 ```
+
 * `source` path to the maverics.env file you edited
 * `config` path to the maverics.tar.gz
 
