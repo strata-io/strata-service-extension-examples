@@ -59,12 +59,12 @@ When setting up the user pool, we recommend leaving all of the options at their 
 * Under Allowed callback URLs, enter `https://localhost/oidc`
 
 3. Scroll to the bottom and click **Create user pool**.
-
-After you've created the user pool and you've been redirected to the User pools page, click the user pool you've just created.
-
-Make a note of the **User Pool ID** and **AWS region**. Go to the App integration tab and scroll down to the App client list. Click the app name, and on the app client page, copy the **Client ID** and **Client secret**.
-
-In the **Users** section, click the **Create user** button and follow the instructions. Make a note of the email address you used for the username.
+4. After you've created the user pool and you've been redirected to the User pools page, click the user pool you've just created.
+5. Make a note of the **User Pool ID** and **AWS region**. 
+6. Go to the App integration tab and scroll down to the App client list. Click the app name. 
+7. On the app client page, copy the **Client ID** and **Client secret**.
+8. Go back to the user pool page. In the **Users** section, click **Create user** and follow the instructions.
+9. Make a note of the email address you used for the username, as this will be the user that is granted permissions by the Amazon Verified Permissions policy in the next section.
 
 ### Configure Maverics to use your Amazon Cognito User Pool as the IDP
 
@@ -143,7 +143,7 @@ Finally, you must [create a separate IAM user](https://docs.aws.amazon.com/IAM/l
 10. Scroll down to Access keys and click **Create access key**.
 11. Select **Application running outside AWS** and click **Next**.
 12. You can set a description tag or leave it blank and click **Next**.
-13. On the Retrieve access keys page, copy the **Access key** and **Secret access key**, and keep them in a safe place. Alternatively, you can download the .csv file. These will be used in the service extension.
+13. On the Retrieve access keys page, copy the **Access key** and **Secret access key**, and keep them in a safe place. Alternatively, you can download the .csv file. These will be used in the service extension to access Amazon Verified Permissions.
 14. Click **Done**.
 
 ## Configure the service extension in Maverics
