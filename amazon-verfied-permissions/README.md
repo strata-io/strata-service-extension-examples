@@ -80,18 +80,18 @@ Update the following fields:
 * **OAuth Client ID** - Enter the client ID of the Maverics application registered in the Amazon Cognito user pool.
 * **OAuth Client Secret** - Enter the client secret of the Maverics application registered in the Amazon Cognito user pool.
 
-## Create the Amazon Verified Permissions policy
+## Create the Amazon Verified Permissions policy and IAM user
 
-For the next step in modernization, we'll add Amazon Verified Permissions to your identity fabric for authorization. In these steps, we'll create an Amazon Verified Permissions policy in Cedar.
+For the next step in modernization, we'll add Amazon Verified Permissions to your identity fabric for authorization. In these steps, we'll create an Amazon Verified Permissions policy in Cedar, as well as an IAM user to access the policy.
 
 ![Amazon Verified Permissions policy](images/verified-permissions-policy.png)
 
 
 
-1. First, go to Amazon Verified Permissions within your AWS console.
+1. First, go to **Amazon Verified Permissions** within your AWS console.
 2. Create a policy using the [Cedar policy language](https://www.cedarpolicy.com/en/tutorial). (Links to the Amazon Verified Permissions docs available soon)
 3. Use the policy available below. This policy permits view and create access to the root resource on your application.
-4. Replace the `User` value with the email address of your test user in your Cognito user pool.
+4. Replace the `User` value below with the email address of your test user in your Cognito user pool.
 
 ```
 permit (
@@ -105,11 +105,52 @@ resource == Endpoint::"/"
 
 5. Click Settings in the sidebar of Amazon Verified Permissions. Make a note of the Policy Store ID, as this will be used in the service extension.
 
+Next, you will need to you will need to create an access policy for your IAM user.
+
+1. Go to **Identity and Access Management (IAM)** within your AWS console. 
+2. Under Access management, go to **Policies**.
+3. Click **Create policy**.
+4. Click **JSON** to go to the JSON policy editor. 
+5. Copy the code block below and paste it in the editor, replacing everything in the editor.
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "verifiedpermissions:*"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
+```
+6. Click **Next**.
+7. Enter a policy name (for example, *Sonar*), and click **Create policy**.
+
+Finally, you must [create a separate IAM user](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html) to access this policy. 
+
+1. Go to **Identity and Access Management (IAM)** within your AWS console. 
+2. Under Access management, go to **Users**.
+3. Click **Add users**.
+4. Give the user a name and click **Next**.
+5. On the Set permissions page, select **Attach policies directly**, and search for Sonar (or the policy you've just created).
+6. Select the policy checkbox and click **Next**.
+7. Click **Create user**.
+8. After the user has been created, you are redirected to the users list. Click the name of the user you've just created
+9. Click **Security credentials**.
+10. Scroll down to Access keys and click **Create access key**.
+11. Select **Application running outside AWS** and click **Next**.
+12. You can set a descritpion tag or leave it blank and click **Next**.
+13. On the Retrieve access keys page, copy the **Access key** and **Secret access key**, and keep them in a safe place. Alternatively, you can download the .csv file. These will be used in the service extension.
+14. Click **Done**.
+
 ## Configure the service extension in Maverics
 
 In these steps we will use a Maverics service extension to call Amazon Verified Permissions to enforce the example Cedar policy.
 
-1. First, open [**Amazon-Verified-Permissions-RecipeSE.go** from Github](https://github.com/strata-io/strata-service-extension-examples/blob/main/amazon-verfied-permissions/amazon-verified-permissions.go) and copy the raw code.
+1. First, open [**amazon-verified-permissions.go** from Github](https://github.com/strata-io/strata-service-extension-examples/blob/main/amazon-verfied-permissions/amazon-verified-permissions.go) and copy the raw code.
 2. In Maverics go to the [Service Extensions page](https://maverics.strata.io/service_extensions) from the left navigation in Maverics, and select **Authorization Service Extension**.
 3. Enter the name below and click **Create**:
 
@@ -117,7 +158,7 @@ In these steps we will use a Maverics service extension to call Amazon Verified 
 Amazon-Verified-Permissions
 ```
 
-4. When you click Create, the service extension code box appears. Paste the code copied from the **Amazon-Verified-Permissions-RecipeSE.go** file.
+4. When you click Create, the service extension code box appears. Paste the code copied from the **amazon-verified-permissions.go** file.
 5. Follow the instructions in the code to replace:
 
 * `policyStoreID` - ID of your Amazon Verified Permissions Store
