@@ -89,7 +89,7 @@ For the next step in modernization, we'll add Amazon Verified Permissions to you
 
 
 1. First, go to Amazon Verified Permissions within your AWS console.
-2. Create a policy using the [Cedar policy language](https://www.cedarpolicy.com/en/tutorial). <Link to the AVP docs once it’s available>
+2. Create a policy using the [Cedar policy language](https://www.cedarpolicy.com/en/tutorial). (Links to the Amazon Verified Permissions docs available soon)
 3. Use the policy available below. This policy permits view and create access to the root resource on your application.
 4. Replace the `User` value with the email address of your test user in your Cognito user pool.
 
