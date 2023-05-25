@@ -1,9 +1,11 @@
 # Amazon Verified Permissions Quick Start Guide
+
 In this guide, we will show you how you can use Maverics to modernize a legacy application with Amazon Cognito for authentication and Amazon Verified Permissions for authorization. With Maverics you can create a new identity fabric for your applications without having to update the application's code.
 
 This repository includes everything you need to pull it all together. The scenario is based on Sonar, a non-standard application that does not understand modern identity protocols. Currently, Sonar relies on a legacy identity provider (IdP) called SiteMinder. Maverics is flexible, and this process works with a modern app or identity system migration as well.
 
 In this this repository you will find:
+
 * **Amazon_Recipe.json**: The custom configuration that will be copied to Maverics.
 * **amazon-verified-permissions.go**: The code for the service extension that will connect your user flow to your Amazon Verified Permissions policy.
 * A local environment configuration and self signed keys to run an Orchestrator:
@@ -82,25 +84,23 @@ Update the following fields:
 
 For the next step in modernization, we'll add Amazon Verified Permissions to your identity fabric for authorization. In these steps, we'll create an Amazon Verified Permissions policy in Cedar.
 
-First, go to Amazon Verified Permissions within your AWS console and create a policy.
-
-<Link to the AVP docs once it’s available>
-
 ![Amazon Verified Permissions policy](images/verified-permissions-policy.png)
 
-Use the sample policy available below. This sample policy permits view and create access to an application for the test user you have in your Cognito user pool.
 
-```
+
+1. First, go to Amazon Verified Permissions within your AWS console.
+2. Create a policy using the [Cedar policy language](https://www.cedarpolicy.com/en/tutorial). <Link to the AVP docs once it’s available>
+3. Use the policy available below. This policy permits view and create access to the root resource on your application.
+4. Replace the `User` value with the email address of your test user in your Cognito user pool.
+
 permit (
-	principal == User::"testuser@example.com",
+	principal == User::"<placeholder>",
 	action in [Action::"create", Action::"view"],
 	resource == Endpoint::"/"
 );
-```
-
 ![Amazon Verified Permissions Policy Store ID](images/policy-store-id.png)
 
-Click Settings in the sidebar of Amazon Verified Permissions. Make a note of the Policy Store ID, as this will be used in the service extension.
+5. Click Settings in the sidebar of Amazon Verified Permissions. Make a note of the Policy Store ID, as this will be used in the service extension.
 
 ## Configure the service extension in Maverics
 
@@ -113,7 +113,6 @@ In these steps we will use a Maverics service extension to call Amazon Verified 
 ```
 Amazon-Verified-Permissions
 ```
-
 4. When you click Create, the service extension code box appears. Paste the code copied from the **Amazon-Verified-Permissions-RecipeSE.go** file.
 5. Follow the instructions in the code to replace:
 
@@ -159,6 +158,7 @@ In this section, we will create a local environment, get the public key, and con
 ## Configure an orchestrator to read the signed configuration
 
 To continue this setup, you will need to download the following files to a directory on your machine:
+
 * [**maverics.env**](https://github.com/strata-io/strata-service-extension-examples/blob/main/amazon-verfied-permissions/maverics.env): The file for your local environment
 * **Self-signed certs**:  PEM encoded key pair provided for the inbound TLS to the orchestrator's HTTP server
   * [**localhost.cer**](https://github.com/strata-io/strata-service-extension-examples/blob/main/amazon-verfied-permissions/localhost.crt)
@@ -176,7 +176,6 @@ export MAVERICS_BUNDLE_PUBLIC_KEY_FILE=./<environment>_public_key.pem
 export MAVERICS_TLS_SERVER_CERT_FILE=./localhost.crt
 export MAVERICS_TLS_SERVER_KEY_FILE=./localhost.key
 ```
-
 This environment file configures the following settings:
 
 * `MAVERICS_RELOAD_CONFIG`: this setting turns on auto-reload
@@ -215,7 +214,6 @@ From the Terminal, start the orchestrator with the following command:
 ```
 source /path/to/your/working/directory/maverics.env && ./maverics_darwin_amd64 -config /path/to/your/working/directory/maverics.tar.gz
 ```
-
 * `source` path to the maverics.env file you edited
 * `config` path to the maverics.tar.gz
 
