@@ -53,7 +53,7 @@ When setting up the user pool, we recommend leaving all of the options at their 
 2. On the Integrate your app section:
 
 * Under Hosted authentication pages, select **Use the Cognito Hosted UI**.
-* Under Initial app client, select **Confidential client**.
+* Under Initial app client, select **Other - A custom app. Choose your own grant, auth flow, and client-secret settings.**
 * Enter an app name, like *Sonar-app*.
 * Ensure **Generate a client secret** is selected under Client secret.
 * Under Allowed callback URLs, enter `https://localhost/oidc`
@@ -86,8 +86,6 @@ For the next step in modernization, we'll add Amazon Verified Permissions to you
 
 ![Amazon Verified Permissions policy](images/verified-permissions-policy.png)
 
-
-
 1. First, go to **Amazon Verified Permissions** within your AWS console.
 2. Create a policy using the [Cedar policy language](https://www.cedarpolicy.com/en/tutorial). (Links to the Amazon Verified Permissions docs available soon)
 3. Use the policy available below. This policy permits view and create access to the root resource on your application.
@@ -107,11 +105,12 @@ resource == Endpoint::"/"
 
 Next, you will need to you will need to create an access policy for your IAM user.
 
-1. Go to **Identity and Access Management (IAM)** within your AWS console. 
+1. Go to **Identity and Access Management (IAM)** within your AWS console.
 2. Under Access management, go to **Policies**.
 3. Click **Create policy**.
-4. Click **JSON** to go to the JSON policy editor. 
+4. Click **JSON** to go to the JSON policy editor.
 5. Copy the code block below and paste it in the editor, replacing everything in the editor.
+
 ```
 {
     "Version": "2012-10-17",
@@ -126,12 +125,13 @@ Next, you will need to you will need to create an access policy for your IAM use
     ]
 }
 ```
+
 6. Click **Next**.
 7. Enter a policy name (for example, *Sonar*), and click **Create policy**.
 
-Finally, you must [create a separate IAM user](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html) to access this policy. 
+Finally, you must [create a separate IAM user](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html) to access this policy.
 
-1. Go to **Identity and Access Management (IAM)** within your AWS console. 
+1. Go to **Identity and Access Management (IAM)** within your AWS console.
 2. Under Access management, go to **Users**.
 3. Click **Add users**.
 4. Give the user a name and click **Next**.
