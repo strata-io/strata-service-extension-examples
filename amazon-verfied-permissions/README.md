@@ -142,7 +142,7 @@ Finally, you must [create a separate IAM user](https://docs.aws.amazon.com/IAM/l
 9. Click **Security credentials**.
 10. Scroll down to Access keys and click **Create access key**.
 11. Select **Application running outside AWS** and click **Next**.
-12. You can set a descritpion tag or leave it blank and click **Next**.
+12. You can set a description tag or leave it blank and click **Next**.
 13. On the Retrieve access keys page, copy the **Access key** and **Secret access key**, and keep them in a safe place. Alternatively, you can download the .csv file. These will be used in the service extension.
 14. Click **Done**.
 
