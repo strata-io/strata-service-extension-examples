@@ -227,4 +227,4 @@ Testing your user flow ensures that Maverics is working as expected and has pass
 4. Go to the Amazon Verified Permissions policy page and change the policy from `forbid` to `permit` and save the policy.
 5. Open a new browser window and repeat steps 1 and 2.
 
-To see this in action and for instructions on how to test your user flows, watch our demonstration video of the complete app modernization process. For more detailed information on setting up Maverics, view our documentation at [docs.strata.io](https://docs.strata.io).
+To see this in action and for instructions on how to test your user flows, watch our [demonstration video](https://www.youtube.com/watch?v=RMGmENc3TGU) of the complete app modernization process. For more detailed information on setting up Maverics, view our documentation at [docs.strata.io](https://docs.strata.io).
