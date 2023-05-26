@@ -21,6 +21,8 @@ import (
 const (
 	// policyStoreID: The ID of your Amazon Verified Permissions policy store.
 	policyStoreID = "your-verified-permissions-store-id"
+	// The region of your Amazon Verified Permissions policy store.
+	region = "your-region"
 	// awsKeyID: The key ID of an IAM user with read access to your Amazon Verified
 	// Permissions policy store.
 	awsKeyID = "your-aws-key-id"
@@ -89,8 +91,8 @@ func createVerifiedPermissionsRequest(principal, path string) (*http.Request, er
 	}
 
 	endpoint := fmt.Sprintf(
-		"https://authz-verifiedpermissions.us-east-1.amazonaws.com/policy-stores/%s/is-authorized",
-		policyStoreID,
+		"https://authz-verifiedpermissions.%s.amazonaws.com/policy-stores/%s/is-authorized",
+		region, policyStoreID,
 	)
 
 	avpReq, err := http.NewRequest(http.MethodPost, endpoint, bytes.NewReader(postBody))
@@ -101,7 +103,7 @@ func createVerifiedPermissionsRequest(principal, path string) (*http.Request, er
 	now := time.Now()
 	credential := strings.Join([]string{
 		now.UTC().Format("20060102"),
-		"us-east-1",
+		region,
 		"verifiedpermissions",
 		"aws4_request",
 	}, "/")
@@ -136,12 +138,13 @@ func signRequest(req *http.Request, now time.Time, credential string) (string, e
 	payload := fmt.Sprintf(`POST
 /policy-stores/%s/is-authorized
 
-host:authz-verifiedpermissions.us-east-1.amazonaws.com
+host:authz-verifiedpermissions.%s.amazonaws.com
 x-amz-date:%s
 
 host;x-amz-date
 %s`,
 		policyStoreID,
+		region,
 		now.UTC().Format("20060102T150405Z"),
 		bodyHash,
 	)
@@ -158,7 +161,7 @@ host;x-amz-date
 	)
 
 	kDate := hmacSHA256([]byte("AWS4"+awsSecretKey), []byte(now.UTC().Format("20060102")))
-	kRegion := hmacSHA256(kDate, []byte("us-east-1"))
+	kRegion := hmacSHA256(kDate, []byte(region))
 	kService := hmacSHA256(kRegion, []byte("verifiedpermissions"))
 	kSigning := hmacSHA256(kService, []byte("aws4_request"))
 	signature := hmacSHA256(kSigning, []byte(sigPayload))
