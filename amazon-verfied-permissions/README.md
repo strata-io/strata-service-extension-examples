@@ -21,11 +21,11 @@ First, sign up for the Maverics Identity Orchestration Platform at [http://maver
 
 ![Sign up for Strata](images/strata-home.png)
 
-After signing up for an account, you'll land on the Dashboard. You can then set up your orchestrator, environment, identity fabric, and user flow using the buttons on the screen or left navigation.
+After signing up for an account, you will land on the Dashboard. You can then set up your orchestrator, environment, identity fabric, and user flow using the buttons on the screen or left navigation.
 
 ## Import the demo Orchestration Recipe
 
-When we mix and match multiple identity services to build out end-to-end user journeys, we call them Orchestration Recipes. Using this Recipe, we'll deploy a user flow for a non-standard header-based demo application called Sonar.
+When we mix and match multiple identity services to build out end-to-end user journeys, we call them Orchestration Recipes. Using this Recipe, we will deploy a user flow for a non-standard header-based demo application called Sonar.
 
 To upload this recipe:
 
@@ -43,7 +43,7 @@ Now that you’ve created a configuration with the default Recipe, the configura
 
 ## Set up Cognito for authentication
 
-The first step we'll take to modernize *Sonar* is to use Amazon Cognito for authentication. In this section, you'll create a Cognito user pool with an app client for Sonar, as well as a test user. You'll then input configuration details into Maverics to complete the setup.
+The first step we will take to modernize *Sonar* is to use Amazon Cognito for authentication. In this section, you will create a Cognito user pool with an app client for Sonar, as well as a test user. You will then input configuration details into Maverics to complete the setup.
 
 First, from Cognito in your AWS console, follow steps 1 and 2 in Amazon's [Cognito Getting Started Guide](https://docs.aws.amazon.com/cognito/latest/developerguide/getting-started-with-cognito-user-pools.html) to create a user pool and add an app client.
 
@@ -58,10 +58,10 @@ When setting up the user pool, we recommend leaving all of the options at their 
 * Enter an app name, like *Sonar-app*.
 * Ensure **Generate a client secret** is selected under Client secret.
 * Under **Allowed callback URLs**, enter `https://localhost/oidc`
-* Ensure that **OpenID Connect scopes** contains `email`, `openid`, and `profile`.
+* Ensure that the **OpenID Connect scopes** field contains `email`, `openid`, and `profile`.
 
 1. Scroll to the bottom and click **Create user pool**.
-2. After you've created the user pool and you've been redirected to the User pools page, click the user pool you've just created.
+2. After you have created the user pool and you have been redirected to the User pools page, click the user pool you have just created.
 3. Make a note of the **User Pool ID** and **AWS region**.
 4. Go to the App integration tab and scroll down to the App client list. Click the app name.
 5. On the app client page, copy the **Client ID** and **Client secret**.
@@ -92,7 +92,7 @@ For the next step in modernization, we will add Amazon Verified Permissions to y
 
 1. First, go to **Amazon Verified Permissions** within your AWS console.
 2. Create a policy store by clicking **Create policy store**. Please refer to the [Amazon Verified Permissions documentation](TODO: ADD THE LINK) for more information on policy stores.
-3. Create a policy written in [Cedar - open-source language for defining permissions as policies](https://www.cedarpolicy.com/en). Please refer to the [Amazon Verified Permissions documentation](TODO: ADD THE LINK) for more information on policy creation.
+3. Create a policy written in [Cedar](https://www.cedarpolicy.com/en) - open-source language for defining permissions as policies. Please refer to the [Amazon Verified Permissions documentation](TODO: ADD THE LINK) for more information on policy creation.
 4. Use the policy available below. This policy will allow the test user to create and view resources at the root endpoint. Replace the user `placeholder` value below with the email address of your test user in your Cognito user pool.
 
 ```cedar
@@ -240,7 +240,7 @@ This environment file configures the following settings:
 
 5. Update the `MAVERICS_BUNDLE_PUBLIC_KEY_FILE=` value to the file name of the .pem file you downloaded and save the .env file.
 
-The Orchestrator instance will then attempt to read the configuration from your local storage, but it will fail until you've deployed the Orchestrator in the next section.
+The Orchestrator instance will then attempt to read the configuration from your local storage, but it will fail until you have deployed the Orchestrator in the next section.
 
 ## Install the Sonar demo app
 
