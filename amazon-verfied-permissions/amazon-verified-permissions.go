@@ -2,7 +2,7 @@ package main
 
 import (
 	"bytes"
-	"crypto/hmac"
+	"context"
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
@@ -10,11 +10,13 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"strings"
 	"time"
 
 	"maverics/app"
 	"maverics/session"
+
+	v4 "github.com/aws/aws-sdk-go-v2/aws/signer/v4"
+	"github.com/aws/aws-sdk-go-v2/config"
 )
 
 // The following values should be updated for your environment.
@@ -23,11 +25,6 @@ const (
 	policyStoreID = "your-verified-permissions-store-id"
 	// The region of your Amazon Verified Permissions policy store.
 	region = "your-region"
-	// awsKeyID: The key ID of an IAM user with read access to your Amazon Verified
-	// Permissions policy store.
-	awsKeyID = "your-aws-key-id"
-	// awsSecretKey: The corresponding secret key for your IAM user.
-	awsSecretKey = "your-aws-secret-key"
 	// The session value from your IdP used as the principal ID in the call to
 	// Amazon Verified Permissions.
 	principalID = "Amazon_Cognito.email"
@@ -101,80 +98,26 @@ func createVerifiedPermissionsRequest(principal, path string) (*http.Request, er
 	}
 
 	now := time.Now()
-	credential := strings.Join([]string{
-		now.UTC().Format("20060102"),
-		region,
-		"verifiedpermissions",
-		"aws4_request",
-	}, "/")
-	sig, err := signRequest(avpReq, now, credential)
+	ctx := context.TODO()
+	cfg, err := config.LoadDefaultConfig(ctx, config.WithRegion(region))
 	if err != nil {
 		return nil, err
 	}
-	date := now.UTC().Format("20060102T150405Z")
 
-	avpReq.Header.Set("Authorization", fmt.Sprintf(
-		"AWS4-HMAC-SHA256 Credential=%s/%s, SignedHeaders=host;x-amz-date, Signature=%s",
-		awsKeyID,
-		credential,
-		sig,
-	))
-	avpReq.Header.Set("X-Amz-Date", date)
-
-	return avpReq, nil
-}
-
-// signRequest generates a signature for the request to the is-authorized endpoint
-// for the verified permission API.
-func signRequest(req *http.Request, now time.Time, credential string) (string, error) {
-	body, err := io.ReadAll(req.Body)
+	creds, err := cfg.Credentials.Retrieve(ctx)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	bodyHash := hex.EncodeToString(hashSHA256(body))
-	req.Body = io.NopCloser(bytes.NewReader(body))
+	payloadHash := hex.EncodeToString(hashSHA256(postBody))
 
-	payload := fmt.Sprintf(`POST
-/policy-stores/%s/is-authorized
+	signer := v4.NewSigner()
+	err = signer.SignHTTP(ctx, creds, avpReq, payloadHash, "verifiedpermissions", region, now)
+	if err != nil {
+		return nil, err
+	}
 
-host:authz-verifiedpermissions.%s.amazonaws.com
-x-amz-date:%s
-
-host;x-amz-date
-%s`,
-		policyStoreID,
-		region,
-		now.UTC().Format("20060102T150405Z"),
-		bodyHash,
-	)
-
-	payloadHash := hex.EncodeToString(hashSHA256([]byte(payload)))
-
-	sigPayload := fmt.Sprintf(`AWS4-HMAC-SHA256
-%s
-%s
-%s`,
-		now.UTC().Format("20060102T150405Z"),
-		credential,
-		payloadHash,
-	)
-
-	kDate := hmacSHA256([]byte("AWS4"+awsSecretKey), []byte(now.UTC().Format("20060102")))
-	kRegion := hmacSHA256(kDate, []byte(region))
-	kService := hmacSHA256(kRegion, []byte("verifiedpermissions"))
-	kSigning := hmacSHA256(kService, []byte("aws4_request"))
-	signature := hmacSHA256(kSigning, []byte(sigPayload))
-
-	return hex.EncodeToString(signature), nil
-}
-
-// hmacSHA256 is a helper method that generates a SHA256 signature of the provided
-// data using the supplied key.
-func hmacSHA256(key []byte, data []byte) []byte {
-	hash := hmac.New(sha256.New, key)
-	hash.Write(data)
-	return hash.Sum(nil)
+	return avpReq, nil
 }
 
 // hashSHA256 is a helper method that returns a SHA256 hash of the provided data.
