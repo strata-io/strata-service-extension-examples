@@ -13,10 +13,9 @@ import (
 	"time"
 
 	"maverics/app"
+	"maverics/aws/config"
+	v4 "maverics/aws/signer/v4"
 	"maverics/session"
-
-	v4 "github.com/aws/aws-sdk-go-v2/aws/signer/v4"
-	"github.com/aws/aws-sdk-go-v2/config"
 )
 
 // The following values should be updated for your environment.
