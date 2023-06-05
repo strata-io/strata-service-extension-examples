@@ -118,8 +118,6 @@ In these steps we will use a Maverics service extension to call Amazon Verified 
 
 * `policyStoreID` - ID of your Amazon Verified Permissions Store
 * `region` - the region where your Amazon Verified Permissions policy store is located
-* `awsKeyID` - the ID of an IAM user with read access to your Amazon Verified Permissions Policy
-* `awsSecretKey` - the corresponding secret key for your IAM user
 
 ![Amazon Verified Permissions service extension](images/service-extension.png)
 
