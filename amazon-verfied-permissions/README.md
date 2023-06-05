@@ -150,7 +150,7 @@ To publish the Sonar user flow to an orchestrator and test it, we need a local e
 
 ## Set permissions to enable use of your Verified Permissions policies
 
-The Orchestrator supports defining a AWS credential as an environment variable. In this local scenario, we will create a policy and a IAM principal's credentials for the orchestrator to use. With this environment variable, in a production scenario, the your environment for example in EC2, it can turn these into a temporary credentials. 
+The orchestrator supports defining an AWS credential as an environment variable. In this local scenario, we will create a policy and an IAM principal user's credentials for the orchestrator to use. In a production scenario, your environment (for example, in EC2) can turn these credentials into temporary credentials.
 
 1. Go to **Identity and Access Management (IAM)** within your AWS console.
 2. Under Access management, go to **Policies**.
