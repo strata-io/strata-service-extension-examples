@@ -68,7 +68,7 @@ When setting up the user pool, we recommend leaving all of the options at their 
 6. Go back to the user pool page. In the **Users** section, click **Create user** and follow the instructions.
 7. Make a note of the email address you used for the username, as this will be the user that is granted permissions by the Amazon Verified Permissions policy in the next section.
 
-### Configure Maverics to use your Amazon Cognito User Pool as the IDP
+## Configure Maverics to use your Amazon Cognito User Pool as the IDP
 
 Return to Maverics. Click [Identity fabric](https://maverics.strata.io/identity_fabric_components) in the left navigation, and select Amazon_Cognito.
 
@@ -148,7 +148,7 @@ With Maverics as your control plane, you will deploy a signed config to a cloud 
 
 To publish the Sonar user flow to an orchestrator and test it, we need a local environment. This includes permissions to use your Verified Permissisions policy, a public key pairing, and a configuration to connect an orchestrator.  Finally, to test the user flow you will run the test app Sonar as a Docker container.
 
-### Set permissions to enable use of your Verified Permissions policies
+## Set permissions to enable use of your Verified Permissions policies
 
 Create an IAM policy that will allow orchestrators running in your environment to use Amazon Verified Permissions for authorization.
 
@@ -193,7 +193,7 @@ Next, let's create an IAM principal to be used by Maverics. Refer to the [create
 13. On the Retrieve access keys page, copy the **Access key** and **Secret access key**, and keep them in a safe place. Alternatively, you can download the .csv file. These will be used in the orchestrator environment variables to access Amazon Verified Permissions.
 14. Click **Done**.
 
-### Create a local environment
+## Create a local environment
 
 1. From the sidebar, go to [Environments](https://maverics.strata.io/environments) and click the **+ icon** next to **Local**.
 2. Configure the following:
