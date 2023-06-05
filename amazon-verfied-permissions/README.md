@@ -8,7 +8,7 @@ In this this repository you will find:
 
 * [Amazon_Recipe.json](https://github.com/strata-io/strata-service-extension-examples/blob/main/amazon-verfied-permissions/Amazon_Recipe.json): The custom configuration that will be copied to Maverics.
 * [amazon-verified-permissions.go](https://github.com/strata-io/strata-service-extension-examples/blob/main/amazon-verfied-permissions/amazon-verified-permissions.go): The code for the service extension that will connect your user flow to your Amazon Verified Permissions policy.
-* A local environment configuration and self signed keys to run an Orchestrator:
+* A local environment configuration and self signed keys to run an orchestrator:
   * [maverics.env](https://github.com/strata-io/strata-service-extension-examples/blob/main/amazon-verfied-permissions/maverics.env)
   * [localhost.crt](https://github.com/strata-io/strata-service-extension-examples/blob/main/amazon-verfied-permissions/localhost.crt)
   * [localhost.key](https://github.com/strata-io/strata-service-extension-examples/blob/main/amazon-verfied-permissions/localhost.key)
@@ -144,13 +144,13 @@ From here, you can now complete the setup of your app's user flow.
 
 Environments enable a hybrid air gap approach where there is no dependency between your own environments, applications, and identity services with Maverics.
 
-With Maverics as your control plane, you deploy signed config to a cloud storage provider and configure orchestrators running in your environment to remotely read that from the container.
+With Maverics as your control plane, you will deploy a signed config to a cloud storage provider, and configure the orchestrators running in your environment to remotely read the config from the container.
 
-To publish the Sonar user flow to an orchestrator and test it we need a local environment. This includes permissions to use your Verified Permissisions policy, a public key pairing and configuration to connect an orchestrator.  Finally, to test the user flow you will run the test app Sonar as a Docker container.
+To publish the Sonar user flow to an orchestrator and test it, we need a local environment. This includes permissions to use your Verified Permissisions policy, a public key pairing, and a configuration to connect an orchestrator.  Finally, to test the user flow you will run the test app Sonar as a Docker container.
 
 ### Set permissions to enable use of your Verified Permissions policies
 
-Create an IAM policy that will allow Orchestrators running in your environment to use Amazon Verified Permissions for authorization.
+Create an IAM policy that will allow orchestrators running in your environment to use Amazon Verified Permissions for authorization.
 
 1. Go to **Identity and Access Management (IAM)** within your AWS console.
 2. Under Access management, go to **Policies**.
@@ -178,33 +178,20 @@ Create an IAM policy that will allow Orchestrators running in your environment t
 
 Next, let's create an IAM principal to be used by Maverics. Refer to the [create a separate IAM user](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html) documentation for more information.
 
-Go to **Identity and Access Management (IAM)** within your AWS console.
-
-Under Access management, go to **Users**.
-
-Click **Add users**.
-
-Give the user a name and click **Next**.
-
-On the Set permissions page, select **Attach policies directly**, and search for *Sonar* (or the policy you have just created).
-
-Select the policy checkbox and click **Next**.
-
-Click **Create user**.
-
-After the user has been created, you are redirected to the users list. Click the name of the user you have just created.
-
-Click **Security credentials**.
-
-Scroll down to Access keys and click **Create access key**.
-
-Select **Application running outside AWS** and click **Next**.
-
-You can set a description tag or leave it blank and click **Create access key**.
-
-On the Retrieve access keys page, copy the **Access key** and **Secret access key**, and keep them in a safe place. Alternatively, you can download the .csv file. These will be used in the Orchestrator environment variables to access Amazon Verified Permissions.
-
-Click **Done**.
+1. Go to **Identity and Access Management (IAM)** within your AWS console.
+2. Under Access management, go to **Users**.
+3. Click **Add users**.
+4. Give the user a name and click **Next**.
+5. On the Set permissions page, select **Attach policies directly**, and search for *Sonar* (or the policy you have just created).
+6. Select the policy checkbox and click **Next**.
+7. Click **Create user**.
+8. After the user has been created, you are redirected to the users list. Click the name of the user you have just created.
+9. Click **Security credentials**.
+10. Scroll down to Access keys and click **Create access key**.
+11. Select **Application running outside AWS** and click **Next**.
+12. You can set a description tag or leave it blank, and click **Create access key**.
+13. On the Retrieve access keys page, copy the **Access key** and **Secret access key**, and keep them in a safe place. Alternatively, you can download the .csv file. These will be used in the orchestrator environment variables to access Amazon Verified Permissions.
+14. Click **Done**.
 
 ### Create a local environment
 
@@ -224,7 +211,7 @@ To continue this setup, you will need to download the following files to a direc
   * [**localhost.key**](https://github.com/strata-io/strata-service-extension-examples/blob/main/amazon-verfied-permissions/localhost.key)
 
 1. On the [Environments page](https://maverics.strata.io/environments), click the Local environment you created.
-2. Download the orchestrator appropriate for your operating system from the **Download Orchestrator** section. Save this file to your local working directory, and [follow our instructions](https://docs.strata.io/set-up-maverics/configure-orchestrators) to install based on your operating system.
+2. Download the orchestrator appropriate for your operating system from the **Download orchestrator** section. Save this file to your local working directory, and [follow our instructions](https://docs.strata.io/set-up-maverics/configure-orchestrators) to install based on your operating system.
 3. Additionally, download the public key .pem file for your local environment from the section labeled **Download Public Key.** Save this to your local working directory.
 4. Open the maverics.env file you downloaded earlier.
 
@@ -249,12 +236,12 @@ This environment file configures the following settings:
 * `MAVERICS_TLS_SERVER_CERT_FILE`: the path to the cert file
 * `MAVERICS_TLS_SERVER_KEY_FILE`: the path to the TLS key file
 * `MAVERICS_BUNDLE_PUBLIC_KEY_FILE`: the working directory path to the .pem-encoded key file that supports the configuration bundle signature verification
-* `AWS_ACCESS_KEY_ID`: the IAM user principal to enable Orchestrators running in your environment  to use your Verified Permissions policy
+* `AWS_ACCESS_KEY_ID`: the IAM user principal to enable orchestrators running in your environment  to use your Verified Permissions policy
 * `AWS_SECRET_ACCESS_KEY`:the IAM user principal's secret access key
 
 5. Update the `MAVERICS_BUNDLE_PUBLIC_KEY_FILE=` value to the file name of the .pem file you downloaded and save the .env file.
 
-The Orchestrator instance will then attempt to read the configuration from your local storage, but it will fail until you have deployed the Orchestrator in the next section.
+The orchestrator instance will then attempt to read the configuration from your local storage, but it will fail until you have deployed the orchestrator in the next section.
 
 6. Update the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` with the IAM Principal credentials created from the previous section.
 
