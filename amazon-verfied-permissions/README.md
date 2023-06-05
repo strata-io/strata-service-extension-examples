@@ -146,11 +146,11 @@ Environments enable a hybrid air gap approach where there is no dependency betwe
 
 With Maverics as your control plane, you will deploy a signed config to a cloud storage provider, and configure the orchestrators running in your environment to remotely read the config from the container.
 
-To publish the Sonar user flow to an orchestrator and test it, we need a local environment. This includes permissions to use your Verified Permissisions policy, a public key pairing, and a configuration to connect an orchestrator.  Finally, to test the user flow you will run the test app Sonar as a Docker container.
+To publish the Sonar user flow to an orchestrator and test it, we need a local environment. This includes permissions to use your Verified Permissions policy, a public key pairing, and a configuration to connect an orchestrator.  Finally, to test the user flow you will run the test app Sonar as a Docker container.
 
 ## Set permissions to enable use of your Verified Permissions policies
 
-Create an IAM policy that will allow orchestrators running in your environment to use Amazon Verified Permissions for authorization.
+The Orchestrator supports defining a AWS credential as an environment variable. In this local scenario, we will create a policy and a IAM principal's credentials for the orchestrator to use. With this environment variable, in a production scenario, the your environment for example in EC2, it can turn these into a temporary credentials. 
 
 1. Go to **Identity and Access Management (IAM)** within your AWS console.
 2. Under Access management, go to **Policies**.
