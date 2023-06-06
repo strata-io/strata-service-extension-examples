@@ -61,25 +61,26 @@ func IsAuthorized(ag *app.AppGateway, rw http.ResponseWriter, req *http.Request)
 	}
 
 	log.Println("isAuthorized decision from Amazon verified permissions: " + string(responseBody))
-	return response.Decision == "Allow"
+	return response.decision == "Allow"
 }
 
 // createVerifiedPermissionsRequest builds a new verified permissions API request with the supplied
 // principal and path.
 func createVerifiedPermissionsRequest(principal, path string) (*http.Request, error) {
 	reqBody := Request{
-		Action: Action{
-			ActionId:   "view",
-			ActionType: "Action",
+		action: Action{
+			actionId:   "view",
+			actionType: "Action",
 		},
-		Principal: Principal{
-			EntityId:   principal,
-			EntityType: "User",
+		principal: Principal{
+			entityId:   principal,
+			entityType: "User",
 		},
-		Resource: Resource{
-			EntityId:   path,
-			EntityType: "Endpoint",
+		resource: Resource{
+			entityId:   path,
+			entityType: "Endpoint",
 		},
+		policyStoreID: policyStoreID,
 	}
 	postBody, err := json.Marshal(reqBody)
 	if err != nil {
@@ -87,14 +88,16 @@ func createVerifiedPermissionsRequest(principal, path string) (*http.Request, er
 	}
 
 	endpoint := fmt.Sprintf(
-		"https://authz-verifiedpermissions.%s.amazonaws.com/policy-stores/%s/is-authorized",
-		region, policyStoreID,
+		"https://verifiedpermissions.%s.amazonaws.com/",
+		region,
 	)
 
 	avpReq, err := http.NewRequest(http.MethodPost, endpoint, bytes.NewReader(postBody))
 	if err != nil {
 		return nil, err
 	}
+
+	avpReq.Header.Set("X-Amz-Target", "VerifiedPermissions.IsAuthorized")
 
 	now := time.Now()
 	ctx := context.TODO()
@@ -127,27 +130,28 @@ func hashSHA256(data []byte) []byte {
 }
 
 type Request struct {
-	Action    Action    `json:"Action"`
-	Principal Principal `json:"Principal"`
-	Resource  Resource  `json:"Resource"`
+	action    Action    `json:"action"`
+	principal Principal `json:"principal"`
+	resource  Resource  `json:"resource"`
+	policyStoreID string `json:"policyStoreId"`
 }
 
 type Action struct {
-	ActionId   string `json:"ActionId"`
-	ActionType string `json:"ActionType"`
+	actionId   string `json:"actionId"`
+	actionType string `json:"actionType"`
 }
 type Principal struct {
-	EntityId   string `json:"EntityId"`
-	EntityType string `json:"EntityType"`
+	entityId   string `json:"entityId"`
+	entityType string `json:"entityType"`
 }
 
 type Resource struct {
-	EntityId   string `json:"EntityId"`
-	EntityType string `json:"EntityType"`
+	entityId   string `json:"entityId"`
+	entityType string `json:"entityType"`
 }
 
 type Response struct {
-	Decision            string        `json:"Decision"`
-	DeterminingPolicies []interface{} `json:"DeterminingPolicies"`
-	Errors              []interface{} `json:"Errors"`
+	decision            string        `json:"decision"`
+	determiningPolicies []interface{} `json:"determiningPolicies"`
+	errors              []interface{} `json:"errors"`
 }
