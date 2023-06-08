@@ -52,21 +52,21 @@ When setting up the user pool, we recommend leaving all of the options at their 
 1. On the Configure sign-in experience page, select **Email** as the sign-in option.
 2. On the Integrate your app section:
 
-* Under Hosted authentication pages, select **Use the Cognito Hosted UI**.
-* Choose a Cognito domain prefix, e.g., *strata-maverics-sonar-app*.
-* Under Initial app client, select **Other - A custom app. Choose your own grant, auth flow, and client-secret settings.**
-* Enter an app name, like *Sonar-app*.
-* Ensure **Generate a client secret** is selected under Client secret.
-* Under **Allowed callback URLs**, enter `https://localhost/oidc`
-* Ensure that the **OpenID Connect scopes** field contains `email`, `openid`, and `profile`.
+   * Under Hosted authentication pages, select **Use the Cognito Hosted UI**.
+   * Choose a Cognito domain prefix, e.g., *strata-maverics-sonar-app*.
+   * Under Initial app client, select **Other - A custom app. Choose your own grant, auth flow, and client-secret settings.**
+   * Enter an app name, like *Sonar-app*.
+   * Ensure **Generate a client secret** is selected under Client secret.
+   * Under **Allowed callback URLs**, enter `https://localhost/oidc`
+   * Ensure that the **OpenID Connect scopes** field contains `email`, `openid`, and `profile`.
 
-1. Scroll to the bottom and click **Create user pool**.
-2. After you have created the user pool and you have been redirected to the User pools page, click the user pool you have just created.
-3. Make a note of the **User Pool ID** and **AWS region**.
-4. Go to the App integration tab and scroll down to the App client list. Click the app name.
-5. On the app client page, copy the **Client ID** and **Client secret**.
-6. Go back to the user pool page. In the **Users** section, click **Create user** and follow the instructions.
-7. Make a note of the email address you used for the username, as this will be the user that is granted permissions by the Amazon Verified Permissions policy in the next section.
+3. Scroll to the bottom and click **Create user pool**.
+4. After you have created the user pool and you have been redirected to the User pools page, click the user pool you have just created.
+5. Make a note of the **User Pool ID** and **AWS region**.
+6. Go to the App integration tab and scroll down to the App client list. Click the app name.
+7. On the app client page, copy the **Client ID** and **Client secret**.
+8. Go back to the user pool page. In the **Users** section, click **Create user** and follow the instructions.
+9. Make a note of the email address you used for the username, as this will be the user that is granted permissions by the Amazon Verified Permissions policy in the next section.
 
 ## Configure Maverics to use your Amazon Cognito User Pool as the IDP
 
@@ -91,8 +91,8 @@ For the next step in modernization, we will add Amazon Verified Permissions to y
 ![Amazon Verified Permissions policy](images/verified-permissions-policy.png)
 
 1. First, go to **Amazon Verified Permissions** within your AWS console.
-2. Create a policy store by clicking **Create policy store**. Please refer to the [Amazon Verified Permissions documentation](TODO: ADD THE LINK) for more information on policy stores.
-3. Create a policy written in [Cedar](https://www.cedarpolicy.com/en) - open-source language for defining permissions as policies. Please refer to the [Amazon Verified Permissions documentation](TODO: ADD THE LINK) for more information on policy creation.
+2. Create a policy store by clicking **Create policy store**. Please refer to the [Amazon Verified Permissions documentation](https://docs.aws.amazon.com/verifiedpermissions/latest/userguide) for more information on policy stores.
+3. Create a policy written in [Cedar](https://www.cedarpolicy.com/en) - open-source language for defining permissions as policies. Please refer to the [Amazon Verified Permissions documentation](https://docs.aws.amazon.com/verifiedpermissions/latest/userguide) for more information on policy creation.
 4. Use the policy available below. This policy will allow the test user to create and view resources at the root endpoint. Replace the user `placeholder` value below with the email address of your test user in your Cognito user pool.
 
 ```cedar
