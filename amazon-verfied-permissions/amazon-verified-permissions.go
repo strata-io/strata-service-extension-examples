@@ -67,7 +67,7 @@ func IsAuthorized(_ *app.AppGateway, _ http.ResponseWriter, req *http.Request) b
 	}
 
 	log.Println("isAuthorized decision from Amazon verified permissions: " + string(responseBody))
-	return response.Decision == "Allow"
+	return response.Decision == "ALLOW"
 }
 
 // createVerifiedPermissionsRequest builds a new verified permissions API request with the supplied
