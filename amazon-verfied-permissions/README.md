@@ -203,7 +203,9 @@ Next, let's create an IAM principal to be used by Maverics. Refer to the [create
 
 To continue this setup, you will need to download the following files to a directory on your machine:
 
-* [**maverics.env**](https://github.com/strata-io/strata-service-extension-examples/blob/main/amazon-verfied-permissions/maverics.env): The file for your local environment
+* [**maverics.env**](https://github.com/strata-io/strata-service-extension-examples/blob/main/amazon-verfied-permissions/maverics.env): The file for your local environment (Mac OSX)
+  or
+* [**maverics-windows.env**](https://github.com/strata-io/strata-service-extension-examples/blob/main/amazon-verfied-permissions/maverics.env): The file for your local environment (Windows)
 * **Self-signed certs**:  PEM encoded key pair provided for the inbound TLS to the orchestrator's HTTP server
   * [**localhost.cer**](https://github.com/strata-io/strata-service-extension-examples/blob/main/amazon-verfied-permissions/localhost.crt)
   * [**localhost.key**](https://github.com/strata-io/strata-service-extension-examples/blob/main/amazon-verfied-permissions/localhost.key)
@@ -211,7 +213,11 @@ To continue this setup, you will need to download the following files to a direc
 1. On the [Environments page](https://maverics.strata.io/environments), click the Local environment you created.
 2. Download the orchestrator appropriate for your operating system from the **Download orchestrator** section. Save this file to your local working directory, and [follow our instructions](https://docs.strata.io/set-up-maverics/configure-orchestrators) to install based on your operating system.
 3. Additionally, download the public key .pem file for your local environment from the section labeled **Download Public Key.** Save this to your local working directory.
-4. Open the maverics.env file you downloaded earlier.
+
+
+### Mac users
+
+Open the maverics.env file you downloaded earlier.
 
 ```bash
 export MAVERICS_RELOAD_CONFIG=true
@@ -237,11 +243,25 @@ This environment file configures the following settings:
 * `AWS_ACCESS_KEY_ID`: the IAM user principal to enable orchestrators running in your environment  to use your Verified Permissions policy
 * `AWS_SECRET_ACCESS_KEY`:the IAM user principal's secret access key
 
-5. Update the `MAVERICS_BUNDLE_PUBLIC_KEY_FILE=` value to the file name of the .pem file you downloaded and save the .env file.
+Update the `MAVERICS_BUNDLE_PUBLIC_KEY_FILE=` value to the file name of the .pem file you downloaded and save the .env file. Update the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` with the IAM Principal credentials created from the previous section. The orchestrator instance will then attempt to read the configuration from your local storage, but it will fail until you have deployed the orchestrator in the next section.
 
-The orchestrator instance will then attempt to read the configuration from your local storage, but it will fail until you have deployed the orchestrator in the next section.
+### Windows users
 
-6. Update the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` with the IAM Principal credentials created from the previous section.
+Open the maverics-windows.env
+
+Windows:
+
+MAVERICS_BUNDLE_PUBLIC_KEY_FILE=C:\your\path\here\local-environment_public_key.pem
+MAVERICS_RELOAD_CONFIG=true
+MAVERICS_DEBUG_MODE=true
+MAVERICS_HTTP_ADDRESS=:443
+MAVERICS_TLS_SERVER_CERT_FILE=C:\your\path\here\localhost.crt
+MAVERICS_TLS_SERVER_KEY_FILE=C:\your\path\here\localhost.key
+MAVERICS_CONFIG=C:\your\path\here\maverics.tar.gz
+AWS_ACCESS_KEY_ID=your_access_key
+AWS_SECRET_ACCESS_KEY=your_secret_access
+
+Update the MAVERICS_BUNDLE_PUBLIC_KEY_FILE=, MAVERICS_TLS_SERVER_CERT_FILE=, MAVERICS_TLS_SERVER_KEY_FILE=, and MAVERICS_CONFIG= values to the correct paths. Update the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` with the IAM Principal credentials created from the previous section. Save the .env file.
 
 ## Install the Sonar demo app
 
@@ -263,6 +283,8 @@ Sonar is an application provided by Strata to demonstrate the user flow. The app
 
 From the steps we completed in the previous section, our last step is to start an orchestrator instance to read your configuration. We need to give the orchestrator a path to the configuration bundle, environment variables on how it will behave, and a command to launch it.
 
+### Mac users
+
 From the Terminal, start the orchestrator with the following command:
 
 ```bash
@@ -271,6 +293,30 @@ source /path/to/your/working/directory/maverics.env && ./maverics_darwin_amd64 -
 
 * `source` path to the *maverics.env* file you edited
 * `config` path to the *maverics.tar.gz* file you downloaded
+
+### Windows users
+
+Before starting the orchestrator instance, you will need to edit your registry with the values saved in the `maverics-windows.env` file. To do this, first install Maverics by double-clicking the .msi file you've downloaded from Maverics. The `maverics.exe` binary will be installed in the `C:\Program Files\Strata Identity\Maverics` directory.
+
+Next, open the Registry Editor and navigate to `HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\mavericsSvc`. Create a multi-string value (`REG_MULTI_SZ`) called Environment if it does not already exist.
+
+Copy and paste the Windows code block from the `maverics-windows.env` file, inserting line breaks between each value. The code block in the text box should look like this:
+
+```
+MAVERICS_BUNDLE_PUBLIC_KEY_FILE=C:\your\path\here\local-environment_public_key.pem
+MAVERICS_RELOAD_CONFIG=true
+MAVERICS_DEBUG_MODE=true
+MAVERICS_HTTP_ADDRESS=:443
+MAVERICS_TLS_SERVER_CERT_FILE=C:\your\path\here\localhost.crt
+MAVERICS_TLS_SERVER_KEY_FILE=C:\your\path\here\localhost.key
+MAVERICS_CONFIG=C:\your\path\here\maverics.tar.gz
+AWS_ACCESS_KEY_ID=your_access_key
+AWS_SECRET_ACCESS_KEY=your_secret_access
+```
+
+The Maverics service needs to be restarted to read these new environment variables. To restart it, from the Computer Management console or the Windows Search field, launch Services (`services.msc`). Find the Maverics service in the list, right-click and select "Restart."
+
+The "Startup type" for the Maverics service is set to "Auto", which means the service will be started each time Windows starts.
 
 ## Try out the Recipe with the test user
 
