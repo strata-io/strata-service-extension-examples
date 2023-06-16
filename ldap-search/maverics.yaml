@@ -1,0 +1,56 @@
+version: ldap-search-loadAttrs
+
+tls:
+  maverics:
+    # TODO: replace the 'certFile' and 'keyFile' values with an absolute path to a
+    # certificate pair. For more info on the TLS configuration, please reference
+    # https://scriptum.strata.io/get-started/transport-security.
+    certFile: { ABSOLUTE PATH TO CERT FILE }
+    keyFile: { ABSOLUTE PATH TO KEY FILE }
+
+http:
+  address: ":443"
+  tls: maverics
+
+logger:
+  level: debug
+
+appgateways:
+  - name: exampleLDAPSearchLoadAttrs
+    basePath: /
+    # The 'upstream' used here is purely for demonstration and can be replaced with
+    # any URL that is resolvable from the machine the Orchestrator is running on.
+    upstream: https://cylog.org
+    headers:
+      EXAMPLE-GROUPS: se.groups
+
+    loadAttrsSE:
+      # It is assumed the loadAttrs.go Service Extension file resides in the
+      # '/etc/maverics/extensions' directory. To change that, update the 'file' field below.
+      funcName: LoadAttrs
+      file: /etc/maverics/extensions/loadAttrs.go
+
+    policies:
+      - location: ~ \.(jpg|png|ico|svg|ttf|js|css|gif)$
+        authentication:
+          allowUnauthenticated: true
+        authorization:
+          allowAll: true
+      - location: /
+        authentication:
+          idps:
+            - azure
+        authorization:
+          allowAll: true
+
+connectors:
+  # The 'name' property is used as a unique ID that the Service Extensions depend on.
+  # Please ensure the Service Extensions are updated if the name of the connectors change.
+  # Additionally, please note that the 'oauthRedirectURL' used in the two connectors
+  # must be unique.
+  - name: azure
+    type: azure
+    authType: saml
+    samlMetadataURL: { SAML METADATA URL }
+    samlConsumerServiceURL: { SAML CONSUMER SERVICE URL }
+    samlEntityID: { SAML ENTITY ID }

@@ -1,0 +1,75 @@
+version: 1
+
+dn: dc=sonarsystems,dc=com
+objectClass: dcObject
+objectClass: organization
+objectClass: top
+dc: sonarsystems
+o: Sonar Systems
+
+dn: ou=People,dc=sonarsystems,dc=com
+objectClass: organizationalUnit
+ou: People
+
+dn: uid=state,ou=People,dc=sonarsystems,dc=com
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: Samuel Tate
+sn: Tate
+givenName: Samuel
+mail: state@sonar-systems.com
+mobile: 604-555-5555
+uid: state
+userPassword:: d9TEVvbr3a#LeUc$p
+
+dn: uid=aadkins,ou=People,dc=sonarsystems,dc=com
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: Allan Adkins
+sn: Adkins
+givenName: Allan
+mail: aadkins@sonar-systems.com
+mobile: 604-555-9090
+uid: aadkins
+userPassword:: d9TEVvbr3a#LeUc$p
+
+dn: uid=shiggins,ou=People,dc=sonarsystems,dc=com
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: Shelly Higgins
+sn: Higgins
+givenName: Shelly
+mail: shiggins@sonar-systems.com
+mobile: 415-123-4567
+uid: shiggins
+userPassword:: d9TEVvbr3a#LeUc$p
+
+dn: ou=groups,dc=sonarsystems,dc=com
+objectClass: organizationalUnit
+objectClass: top
+ou: groups
+
+dn: cn=GroupOne,ou=groups,dc=sonarsystems,dc=com
+objectClass: groupOfUniqueNames
+objectClass: top
+cn: GroupOne
+uniqueMember: uid=state@sonar-systems.com,ou=People,dc=sonarsystems,dc=com
+
+dn: cn=GroupTwo,ou=groups,dc=sonarsystems,dc=com
+objectClass: groupOfUniqueNames
+objectClass: top
+cn: GroupTwo
+uniqueMember: uid=state@sonar-systems.com,ou=People,dc=sonarsystems,dc=com
+
+dn: cn=GroupThree,ou=groups,dc=sonarsystems,dc=com
+objectClass: groupOfUniqueNames
+objectClass: top
+cn: GroupThree
+uniqueMember: uid=aadkins@sonar-systems.com,ou=People,dc=sonarsystems,dc=com
+
