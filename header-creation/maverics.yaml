@@ -39,13 +39,10 @@ appgateways:
         authorization:
           allowAll: true
 
-# Azure AD is used as the IDP in this example, but that can easily be changed by
-# modifying the IDP and connector definitions below. For more info on connectors,
-# please reference https://docs.strata.io/get-acquainted/connectors.
-idps:
-  - name: azure
-
 connectors:
+  # Azure AD is used as the IDP in this example, but that can easily be changed by
+  # modifying the IDP and connector definitions below. For more info on connectors,
+  # please reference https://docs.strata.io/get-acquainted/connectors.
   - name: azure
     type: azure
     authType: oidc

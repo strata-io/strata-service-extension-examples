@@ -37,10 +37,6 @@ appgateways:
         authorization:
           allowAll: true
 
-idps:
-  - name: azure
-  - name: auth0
-
 connectors:
   # The 'name' property is used as a unique ID that the Service Extensions depend on.
   # Please ensure the Service Extensions are updated if the name of the connectors change.
