@@ -31,7 +31,7 @@ appgateways:
         authorization:
           allowAll: true
 
-      - location: ~ \.(jpg|png|ico|svg|ttf|js|css)
+      - location: ~ \.(jpg|png|ico|svg|ttf|js|css)$
         authentication:
           allowUnauthenticated: true
         authorization:
