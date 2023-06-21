@@ -10,6 +10,7 @@ In this this repository you will find:
 * [amazon-verified-permissions.go](https://github.com/strata-io/strata-service-extension-examples/blob/main/amazon-verfied-permissions/amazon-verified-permissions.go): The code for the service extension that will connect your user flow to your Amazon Verified Permissions policy.
 * A local environment configuration and self signed keys to run an orchestrator:
   * [maverics.env](https://github.com/strata-io/strata-service-extension-examples/blob/main/amazon-verfied-permissions/maverics.env)
+  * [maverics-windows.env](https://github.com/strata-io/strata-service-extension-examples/blob/main/amazon-verfied-permissions/maverics-windows.env)
   * [localhost.crt](https://github.com/strata-io/strata-service-extension-examples/blob/main/amazon-verfied-permissions/localhost.crt)
   * [localhost.key](https://github.com/strata-io/strata-service-extension-examples/blob/main/amazon-verfied-permissions/localhost.key)
 
@@ -91,7 +92,7 @@ For the next step in modernization, we will add Amazon Verified Permissions to y
 ![Amazon Verified Permissions policy](images/verified-permissions-policy.png)
 
 1. First, go to **Amazon Verified Permissions** within your AWS console.
-2. Create a policy store by clicking **Create policy store**. Please refer to the [Amazon Verified Permissions documentation](https://docs.aws.amazon.com/verifiedpermissions/latest/userguide) for more information on policy stores.
+2. Create an empty policy store by clicking **Create policy store**. Please refer to the [Amazon Verified Permissions documentation](https://docs.aws.amazon.com/verifiedpermissions/latest/userguide) for more information on policy stores.
 3. Create a policy written in [Cedar](https://www.cedarpolicy.com/en) - open-source language for defining permissions as policies. Please refer to the [Amazon Verified Permissions documentation](https://docs.aws.amazon.com/verifiedpermissions/latest/userguide) for more information on policy creation.
 4. Use the policy available below. This policy will allow the test user to create and view resources at the root endpoint. Replace the user `placeholder` value below with the email address of your test user in your Cognito user pool.
 
@@ -207,12 +208,12 @@ To continue this setup, you will need to download the following files to a direc
   or
 * [**maverics-windows.env**](https://github.com/strata-io/strata-service-extension-examples/blob/main/amazon-verfied-permissions/maverics.env): The file for your local environment (Windows)
 * **Self-signed certs**:  PEM encoded key pair provided for the inbound TLS to the orchestrator's HTTP server
-  * [**localhost.cer**](https://github.com/strata-io/strata-service-extension-examples/blob/main/amazon-verfied-permissions/localhost.crt)
+  * [**localhost.crt**](https://github.com/strata-io/strata-service-extension-examples/blob/main/amazon-verfied-permissions/localhost.crt)
   * [**localhost.key**](https://github.com/strata-io/strata-service-extension-examples/blob/main/amazon-verfied-permissions/localhost.key)
 
 1. On the [Environments page](https://maverics.strata.io/environments), click the Local environment you created.
 2. Download the orchestrator appropriate for your operating system from the **Download orchestrator** section. Save this file to your local working directory, and [follow our instructions](https://docs.strata.io/set-up-maverics/configure-orchestrators) to install based on your operating system.
-3. Additionally, download the public key .pem file for your local environment from the section labeled **Download Public Key.** Save this to your local working directory.
+3. Additionally, download the public key .pem file for your local environment from the section labeled **Public Key.** Save this to your local working directory.
 
 
 ### Mac users
@@ -251,6 +252,7 @@ Open the maverics-windows.env
 
 Windows:
 
+```
 MAVERICS_BUNDLE_PUBLIC_KEY_FILE=C:\your\path\here\local-environment_public_key.pem
 MAVERICS_RELOAD_CONFIG=true
 MAVERICS_DEBUG_MODE=true
@@ -260,8 +262,9 @@ MAVERICS_TLS_SERVER_KEY_FILE=C:\your\path\here\localhost.key
 MAVERICS_CONFIG=C:\your\path\here\maverics.tar.gz
 AWS_ACCESS_KEY_ID=your_access_key
 AWS_SECRET_ACCESS_KEY=your_secret_access
+```
 
-Update the MAVERICS_BUNDLE_PUBLIC_KEY_FILE=, MAVERICS_TLS_SERVER_CERT_FILE=, MAVERICS_TLS_SERVER_KEY_FILE=, and MAVERICS_CONFIG= values to the correct paths. Update the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` with the IAM Principal credentials created from the previous section. Save the .env file.
+Update the `MAVERICS_BUNDLE_PUBLIC_KEY_FILE=`, `MAVERICS_TLS_SERVER_CERT_FILE=`, `MAVERICS_TLS_SERVER_KEY_FILE=`, and `MAVERICS_CONFIG`= values to the correct paths. Update the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` with the IAM Principal credentials created from the previous section. Save the .env file.
 
 ## Install the Sonar demo app
 
