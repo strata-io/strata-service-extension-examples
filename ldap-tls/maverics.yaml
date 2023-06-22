@@ -1,0 +1,40 @@
+version: ldap-tls
+
+tls:
+  maverics:
+    # TODO: replace the 'certFile' and 'keyFile' values with an absolute path to a
+    # certificate pair. For more info on the TLS configuration, please reference
+    # https://scriptum.strata.io/get-started/transport-security.
+    certFile: { ABSOLUTE PATH TO CERT FILE }
+    keyFile: { ABSOLUTE PATH TO KEY FILE }
+
+http:
+  address: ":443"
+  tls: maverics
+
+logger:
+  level: debug
+
+appgateways:
+  - name: exampleLDAPTLS
+    basePath: /
+    # The 'upstream' used here is purely for demonstration and can be replaced with
+    # any URL that is resolvable from the machine the Orchestrator is running on.
+    upstream: https://cylog.org
+
+    policies:
+      - location: ~ \.(jpg|png|ico|svg|ttf|js|css|gif)$
+        authentication:
+          allowUnauthenticated: true
+        authorization:
+          allowAll: true
+      - location: /
+        authentication:
+          isAuthenticatedSE:
+            funcName: IsAuthenticated
+            file: /etc/maverics/extensions/auth.go
+          authenticateSE:
+            funcName: Authenticate
+            file: /etc/maverics/extensions/auth.go
+        authorization:
+          allowAll: true
