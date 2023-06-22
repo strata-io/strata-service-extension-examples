@@ -51,6 +51,7 @@ connectors:
   - name: azure
     type: azure
     authType: saml
+    # TODO: Configure the SAML Azure IDP.
     samlMetadataURL: { SAML METADATA URL }
     samlConsumerServiceURL: { SAML CONSUMER SERVICE URL }
     samlEntityID: { SAML ENTITY ID }

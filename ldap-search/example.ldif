@@ -1,17 +1,17 @@
 version: 1
 
-dn: dc=sonarsystems,dc=com
+dn: dc=examples,dc=com
 objectClass: dcObject
 objectClass: organization
 objectClass: top
-dc: sonarsystems
-o: Sonar Systems
+dc: examples
+o: Example Org
 
-dn: ou=People,dc=sonarsystems,dc=com
+dn: ou=People,dc=examples,dc=com
 objectClass: organizationalUnit
 ou: People
 
-dn: uid=state,ou=People,dc=sonarsystems,dc=com
+dn: uid=state,ou=People,dc=examples,dc=com
 objectClass: inetOrgPerson
 objectClass: organizationalPerson
 objectClass: person
@@ -19,12 +19,12 @@ objectClass: top
 cn: Samuel Tate
 sn: Tate
 givenName: Samuel
-mail: state@sonar-systems.com
+mail: state@examples.com
 mobile: 604-555-5555
 uid: state
 userPassword:: d9TEVvbr3a#LeUc$p
 
-dn: uid=aadkins,ou=People,dc=sonarsystems,dc=com
+dn: uid=aadkins,ou=People,dc=examples,dc=com
 objectClass: inetOrgPerson
 objectClass: organizationalPerson
 objectClass: person
@@ -32,12 +32,12 @@ objectClass: top
 cn: Allan Adkins
 sn: Adkins
 givenName: Allan
-mail: aadkins@sonar-systems.com
+mail: aadkins@examples.com
 mobile: 604-555-9090
 uid: aadkins
 userPassword:: d9TEVvbr3a#LeUc$p
 
-dn: uid=shiggins,ou=People,dc=sonarsystems,dc=com
+dn: uid=shiggins,ou=People,dc=examples,dc=com
 objectClass: inetOrgPerson
 objectClass: organizationalPerson
 objectClass: person
@@ -45,31 +45,31 @@ objectClass: top
 cn: Shelly Higgins
 sn: Higgins
 givenName: Shelly
-mail: shiggins@sonar-systems.com
+mail: shiggins@examples.com
 mobile: 415-123-4567
 uid: shiggins
 userPassword:: d9TEVvbr3a#LeUc$p
 
-dn: ou=groups,dc=sonarsystems,dc=com
+dn: ou=groups,dc=examples,dc=com
 objectClass: organizationalUnit
 objectClass: top
 ou: groups
 
-dn: cn=GroupOne,ou=groups,dc=sonarsystems,dc=com
+dn: cn=GroupOne,ou=groups,dc=examples,dc=com
 objectClass: groupOfUniqueNames
 objectClass: top
 cn: GroupOne
-uniqueMember: uid=state@sonar-systems.com,ou=People,dc=sonarsystems,dc=com
+uniqueMember: uid=state@examples.com,ou=People,dc=examples,dc=com
 
-dn: cn=GroupTwo,ou=groups,dc=sonarsystems,dc=com
+dn: cn=GroupTwo,ou=groups,dc=examples,dc=com
 objectClass: groupOfUniqueNames
 objectClass: top
 cn: GroupTwo
-uniqueMember: uid=state@sonar-systems.com,ou=People,dc=sonarsystems,dc=com
+uniqueMember: uid=state@examples.com,ou=People,dc=examples,dc=com
 
-dn: cn=GroupThree,ou=groups,dc=sonarsystems,dc=com
+dn: cn=GroupThree,ou=groups,dc=examples,dc=com
 objectClass: groupOfUniqueNames
 objectClass: top
 cn: GroupThree
-uniqueMember: uid=aadkins@sonar-systems.com,ou=People,dc=sonarsystems,dc=com
+uniqueMember: uid=aadkins@examples.com,ou=People,dc=examples,dc=com
 

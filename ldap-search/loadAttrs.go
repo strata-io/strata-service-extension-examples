@@ -17,9 +17,9 @@ import (
 
 const (
 	// TODO: Adjust these values based on your LDAP configuration.
-	ldapServerName = "ldap.sonarsystems.com"
-	ldapBaseDN     = "dc=sonarsystems,dc=com"
-	ldapFilterFmt  = "(&(uniquemember=uid=%s,ou=People,dc=sonarsystems,dc=com))"
+	ldapServerName = "ldap.examples.com"
+	ldapBaseDN     = "dc=examples,dc=com"
+	ldapFilterFmt  = "(&(uniquemember=uid=%s,ou=People,dc=examples,dc=com))"
 
 	delimiter = ","
 )
