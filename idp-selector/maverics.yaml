@@ -12,7 +12,7 @@ http:
 
 appgateways:
   - name: headers
-    location: /
+    basePath: /
     # The 'upstream' used here is purely for demonstration and can be replaced with
     # any URL that is resolvable from the machine the Orchestrator is running on.
     upstream: https://httpbin.org
@@ -21,25 +21,21 @@ appgateways:
       - location: /
         authentication:
           # It is assumed the auth.go Service Extension file resides in the
-          # '/etc/maverics' directory. To change that, update the 'file' fields below.
+          # '/etc/maverics/extensions' directory. To change that, update the 'file' fields below.
           isAuthenticatedSE:
             funcName: IsAuthenticated
-            file: /etc/maverics/auth.go
+            file: /etc/maverics/extensions/auth.go
           authenticateSE:
             funcName: Authenticate
-            file: /etc/maverics/auth.go
+            file: /etc/maverics/extensions/auth.go
         authorization:
           allowAll: true
 
-      - location: ~ \.(jpg|png|ico|svg|ttf|js|css)
+      - location: ~ \.(jpg|png|ico|svg|ttf|js|css)$
         authentication:
           allowUnauthenticated: true
         authorization:
           allowAll: true
-
-idps:
-  - name: azure
-  - name: auth0
 
 connectors:
   # The 'name' property is used as a unique ID that the Service Extensions depend on.
