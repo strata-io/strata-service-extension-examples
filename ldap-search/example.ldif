@@ -72,4 +72,3 @@ objectClass: groupOfUniqueNames
 objectClass: top
 cn: GroupThree
 uniqueMember: uid=aadkins@examples.com,ou=People,dc=examples,dc=com
-
