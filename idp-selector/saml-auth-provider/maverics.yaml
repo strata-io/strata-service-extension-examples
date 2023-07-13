@@ -1,0 +1,60 @@
+http:
+  address: ":443"
+  tls: maverics
+
+tls:
+  maverics:
+    # TODO: replace the 'certFile' and 'keyFile' values with an absolute path to a
+    # certificate pair. For more info on the TLS configuration, please reference
+    # https://scriptum.strata.io/get-started/transport-security.
+    certFile: { ABSOLUTE PATH TO CERT FILE }
+    keyFile: { ABSOLUTE PATH TO KEY FILE }
+
+authproviders:
+  # More information on configuring the SAML AuthProvider can be found at:
+  # https://docs.strata.io/orchestrator-reference/authproviders/samlprovider
+  - name: samlAuthProvider
+    type: saml
+    metadataEndpoint: { SAML METADATA ENDPOINT }
+    singleSignOnServiceEndpoint: { SAML SSO SERVICE ENDPOINT }
+    issuer: { SAML ISSUER }
+    signature:
+      certificate: <samlIDPcertificate>
+      privateKey: <samlIDPPrivateKey>
+    clients:
+      - name: example-client
+        audience: https://foo-c-dev-ed.my.salesforce.com/telus
+        consumerServiceURL: https://foo-c-dev-ed.my.salesforce.com
+        duration: 60
+        requestVerification:
+          skipVerification: true
+        authentication:
+          # It is assumed the auth.go Service Extension file resides in the
+          # '/etc/maverics/extensions' directory. To change that, update the 'file' fields below.
+          isAuthenticatedSE:
+            funcName: IsAuthenticated
+            file: "/etc/maverics/extensions/auth.go"
+          authenticateSE:
+            funcName: Authenticate
+            file: "/etc/maverics/extensions/auth.go"
+        buildClaimsSE:
+          funcName: BuildClaims
+          file: "/etc/maverics/extensions/auth.go"
+
+connectors:
+  - name: Azure
+    type: azure
+    authType: saml
+    samlMetadataURL: { SAML METADATA URL }
+    samlConsumerServiceURL: { SAML ACS URL }
+    samlEntityID: { SAML ENTITY ID }
+    graphURL: https://graph.microsoft.com
+
+  - name: Okta
+    type: okta
+    domain: { OKTA DOMAIN }
+    apiToken: { OKTA API TOKEN }
+    oidcWellKnownURL: { OIDC WELL KNOWN URL }
+    oauthClientID: { OAUTH CLIENT ID }
+    oauthClientSecret: { OAUTH CLIENT SECRET }
+    oauthRedirectURL: { OAUTH REDIRECT URL }
