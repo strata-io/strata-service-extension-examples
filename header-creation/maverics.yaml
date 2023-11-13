@@ -10,24 +10,25 @@ http:
   address: :443
   tls: maverics
 
-appgateways:
+apps:
   - name: exampleHeaderCreation
-    basePath: /
+    type: proxy
+    routePatterns:
+      - /
     # The 'upstream' used here is purely for demonstration and can be replaced with
     # any URL that is resolvable from the machine the Orchestrator is running on.
     upstream: https://httpbin.org
 
     headers:
-      EXAMPLE-SUB: azure.sub
+      - name: EXAMPLE-SUB
+        value: "{{ azure.sub }}"
       # It is assumed the header.go Service Extension file resides in the
       # '/etc/maverics/extensions' directory. To change that, update the 'file' fields below.
       # TODO: confirm the file paths defined below are correct.
-      EXAMPLE-FIRST-NAME:
-        createHeader:
+      - createHeaderSE:
           funcName: CreateFirstNameHeader
           file: /etc/maverics/extensions/header.go
-      EXAMPLE-LAST-NAME:
-        createHeader:
+      - createHeaderSE:
           funcName: CreateLastNameHeader
           file: /etc/maverics/extensions/header.go
 
