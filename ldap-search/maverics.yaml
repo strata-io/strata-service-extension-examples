@@ -15,20 +15,28 @@ http:
 logger:
   level: debug
 
-appgateways:
+apps:
   - name: exampleLDAPSearchLoadAttrs
-    basePath: /
+    type: proxy
+    routePatterns:
+      - /
     # The 'upstream' used here is purely for demonstration and can be replaced with
     # any URL that is resolvable from the machine the Orchestrator is running on.
     upstream: https://cylog.org
     headers:
-      EXAMPLE-GROUPS: se.groups
+      - name: EXAMPLE-GROUPS
+        value: "{{ se.groups }}"
 
     loadAttrsSE:
       # It is assumed the loadAttrs.go Service Extension file resides in the
       # '/etc/maverics/extensions' directory. To change that, update the 'file' field below.
       funcName: LoadAttrs
       file: /etc/maverics/extensions/loadAttrs.go
+      metadata:
+        ldapServerName: "ldap3.examples.com"
+        ldapBaseDN: "dc=examples,dc=com"
+        ldapFilterFmt: "(&(uniquemember=uid=%s,ou=People,dc=examples,dc=com))"
+        delimiter: ","
 
     policies:
       - location: ~ \.(jpg|png|ico|svg|ttf|js|css|gif)$
