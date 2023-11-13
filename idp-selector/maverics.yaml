@@ -10,9 +10,11 @@ http:
   address: :443
   tls: maverics
 
-appgateways:
+apps:
   - name: headers
-    basePath: /
+    type: proxy
+    routePatterns:
+      - /
     # The 'upstream' used here is purely for demonstration and can be replaced with
     # any URL that is resolvable from the machine the Orchestrator is running on.
     upstream: https://httpbin.org
@@ -25,6 +27,8 @@ appgateways:
           isAuthenticatedSE:
             funcName: IsAuthenticated
             file: /etc/maverics/extensions/auth.go
+            metadata:
+              idps: "azure,auth0"
           authenticateSE:
             funcName: Authenticate
             file: /etc/maverics/extensions/auth.go
