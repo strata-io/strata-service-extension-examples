@@ -8,14 +8,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"time"
 
-	"maverics/app"
-	"maverics/aws/config"
-	v4 "maverics/aws/signer/v4"
-	"maverics/session"
+	awsv4 "github.com/aws/aws-sdk-go-v2/aws/signer/v4"
+	awsconfig "github.com/aws/aws-sdk-go-v2/config"
+	"github.com/strata-io/service-extension/orchestrator"
 )
 
 // The following values should be updated for your environment.
@@ -38,35 +36,43 @@ const (
 // IsAuthorized is called after you log in with your IdP.  This function calls the
 // Amazon Verified Permissions API with the associated principalID and endpoint to
 // determine the authorization decision.
-func IsAuthorized(_ *app.AppGateway, _ http.ResponseWriter, req *http.Request) bool {
-	email := session.GetString(req, principalID)
-	log.Println("requesting isAuthorized decision for " + email + " at " + req.URL.Path)
+func IsAuthorized(api orchestrator.Orchestrator, _ http.ResponseWriter, req *http.Request) bool {
+	logger := api.Logger()
+	session, err := api.Session()
+	if err != nil {
+		logger.Error("se", "unable to retrieve session", "error", err.Error())
+		return false
+	}
+
+	email, _ := session.GetString(principalID)
+
+	logger.Debug("se", "requesting isAuthorized decision for "+email+" at "+req.URL.Path)
 
 	avpReq, err := createVerifiedPermissionsRequest(email, req.URL.Path)
 	if err != nil {
-		log.Println("error creating request: " + err.Error())
+		logger.Error("se", "error creating request", "error", err.Error())
 		return false
 	}
 
 	result, err := http.DefaultClient.Do(avpReq)
 	if err != nil {
-		log.Println("error sending request: " + err.Error())
+		logger.Error("se", "error sending request", "error", err.Error())
 		return false
 	}
 	responseBody, err := io.ReadAll(result.Body)
 	if err != nil {
-		log.Println("error reading response: " + err.Error())
+		logger.Error("se", "error reading response", "error", err.Error())
 		return false
 	}
 
 	var response Response
 	err = json.Unmarshal(responseBody, &response)
 	if err != nil {
-		log.Println("error unmarshalling response: " + err.Error())
+		logger.Error("se", "error unmarshalling response", "error", err.Error())
 		return false
 	}
 
-	log.Println("isAuthorized decision from Amazon verified permissions: " + string(responseBody))
+	logger.Debug("se", "isAuthorized decision from Amazon verified permissions: "+string(responseBody))
 	return response.Decision == "ALLOW"
 }
 
@@ -103,7 +109,7 @@ func createVerifiedPermissionsRequest(principal, path string) (*http.Request, er
 
 	now := time.Now()
 	ctx := context.TODO()
-	cfg, err := config.LoadDefaultConfig(ctx, config.WithRegion(region))
+	cfg, err := awsconfig.LoadDefaultConfig(ctx, awsconfig.WithRegion(region))
 	if err != nil {
 		return nil, err
 	}
@@ -115,7 +121,7 @@ func createVerifiedPermissionsRequest(principal, path string) (*http.Request, er
 
 	payloadHash := hex.EncodeToString(hashSHA256(postBody))
 
-	signer := v4.NewSigner()
+	signer := awsv4.NewSigner()
 	err = signer.SignHTTP(ctx, creds, avpReq, payloadHash, "verifiedpermissions", region, now)
 	if err != nil {
 		return nil, err

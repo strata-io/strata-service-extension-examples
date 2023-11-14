@@ -1,7 +1,8 @@
 {
-  "appgateways": [
+  "apps": [
     {
-      "basePath": "/",
+      "type": "proxy",
+      "routePatterns": ["/"],
       "errorPage": "/error",
       "host": "localhost",
       "name": "Sonar",
@@ -42,16 +43,24 @@
           "authorization": {
             "allowAll": false
           },
-          "headers": {
-            "SM_USER": "Amazon_Cognito.email",
-            "firstname": "Amazon_Cognito.given_name",
-            "lastname": "Amazon_Cognito.family_name"
-          },
+          "headers": [
+            {
+              "name": "SM_USER",
+              "value": "{{Amazon_Cognito.email}}"
+            },
+            {
+              "name": "firstname",
+              "value": "{{ Amazon_Cognito.given_name }}"
+            },
+            {
+              "name": "lastname",
+              "value": "{{ Amazon_Cognito.family_name }}"
+            }
+          ],
           "location": "/"
         }
       ],
       "preserveHost": true,
-      "type": "header",
       "unauthorizedPage": "/accessdenied",
       "upstream": "http://localhost:8987"
     }
