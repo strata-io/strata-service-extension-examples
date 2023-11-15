@@ -47,7 +47,7 @@ func Authenticate(api orchestrator.Orchestrator, rw http.ResponseWriter, req *ht
 		http.Error(rw, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
-	secretP, err := api.SecretProvider()
+	secretProvider, err := api.SecretProvider()
 	if err != nil {
 		logger.Error("se", "unable to retrieve secret provider", "error", err.Error())
 		http.Error(rw, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
@@ -78,7 +78,7 @@ func Authenticate(api orchestrator.Orchestrator, rw http.ResponseWriter, req *ht
 		http.Error(rw, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
-	ldapCACert := secretP.GetString(ldapCASecretName)
+	ldapCACert := secretProvider.GetString(ldapCASecretName)
 	certPool.AppendCertsFromPEM([]byte(ldapCACert))
 	tlsCfg := &tls.Config{
 		ServerName: ldapServerName,
