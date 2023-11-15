@@ -3,21 +3,37 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
-	"maverics/app"
-	"maverics/log"
-	"maverics/session"
+	"github.com/strata-io/service-extension/orchestrator"
 )
 
 // IsAuthenticated determines if the user is authenticated. Authentication status is
 // derived by querying the session cache.
-func IsAuthenticated(ag *app.AppGateway, _ http.ResponseWriter, req *http.Request) bool {
-	log.Info("msg", "determining if user is authenticated")
+func IsAuthenticated(api orchestrator.Orchestrator, rw http.ResponseWriter, _ *http.Request) bool {
+	logger := api.Logger()
+	logger.Info("se", "determining if user is authenticated")
 
-	for idpName := range ag.IDPs {
-		authenticated := session.GetString(req, idpName+".authenticated")
+	session, err := api.Session()
+	if err != nil {
+		logger.Error("se", "unable to retrieve session", "error", err.Error())
+		http.Error(rw, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return false
+	}
+
+	metadata := api.Metadata()
+	idpNames := strings.Split(metadata["idps"].(string), ",")
+
+	for _, idpName := range idpNames {
+		authenticated, err := session.GetString(idpName + ".authenticated")
+		if err != nil {
+			logger.Error(
+				"se", fmt.Sprintf("unable to retrieve session value '%s.authenticated'", idpName),
+				"error", err.Error(),
+			)
+		}
 		if authenticated == "true" {
-			log.Info("msg", fmt.Sprintf("user is authenticated with '%s'", idpName))
+			logger.Info("se", fmt.Sprintf("user is authenticated with '%s'", idpName))
 			return true
 		}
 	}
@@ -26,36 +42,42 @@ func IsAuthenticated(ag *app.AppGateway, _ http.ResponseWriter, req *http.Reques
 }
 
 // Authenticate authenticates the user against the IDP that they select.
-func Authenticate(ag *app.AppGateway, rw http.ResponseWriter, req *http.Request) error {
-	log.Info("msg", "authenticating user")
+func Authenticate(api orchestrator.Orchestrator, rw http.ResponseWriter, req *http.Request) {
+	logger := api.Logger()
+	logger.Info("se", "authenticating user")
 
 	if req.Method == http.MethodGet {
-		log.Info("msg", "received GET request, rendering IDP selector form")
-
+		logger.Info("se", "received GET request, rendering IDP selector form")
 		_, _ = rw.Write([]byte(idpForm))
-		return nil
+		return
 	}
 
 	if req.Method != http.MethodPost {
-		return fmt.Errorf("receieved unexpected request type '%s', expected POST", req.Method)
+		logger.Error("se", fmt.Sprintf("received unexpected request method '%s', expected POST", req.Method))
+		http.Error(rw, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		return
 	}
 
-	log.Info("msg", "parsing form from request")
+	logger.Debug("se", "parsing form from request")
 	err := req.ParseForm()
 	if err != nil {
-		return fmt.Errorf("failed to parse form from request: %w", err)
+		logger.Error("se", "failed to parse form from request", "error", err.Error())
+		http.Error(rw, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
 	}
 
 	selectedIDP := req.Form.Get("idp")
-	log.Info("msg", fmt.Sprintf("user seleceted '%s' IDP for authentication", selectedIDP))
+	logger.Info("se", fmt.Sprintf("user selected '%s' IDP for authentication", selectedIDP))
 
-	log.Info("msg", fmt.Sprintf("authenticating user against '%s", selectedIDP))
-	idp, found := ag.IDPs[selectedIDP]
-	if !found {
-		return fmt.Errorf("selected IDP '%s' was not found on AppGateway", selectedIDP)
+	idp, err := api.IdentityProvider(selectedIDP)
+	if err != nil {
+		logger.Error("se", "unable to lookup idp", "error", err.Error())
+		http.Error(rw, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
 	}
-	idp.CreateRequest().Login(rw, req)
-	return nil
+
+	idp.Login(rw, req)
+	return
 }
 
 // idpForm is a basic form that is rendered in order to enable the user to pick which
