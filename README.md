@@ -1,5 +1,5 @@
 ----
-# NOTE: This repository has been archived. The examples are now maintained within https://github.com/strata-io/service-extension
+# NOTE: This repository has been archived. The examples are now maintained at https://github.com/strata-io/service-extension.
 ----
 # Strata Identity Service Extension Examples
 
