@@ -1,3 +1,6 @@
+----
+# NOTE: This repository has been archived. The examples are now maintained within https://github.com/strata-io/service-extension
+----
 # Strata Identity Service Extension Examples
 
 Integrating identity systems requires extreme configurability. Service Extensions 
